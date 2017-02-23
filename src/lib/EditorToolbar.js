@@ -3,7 +3,7 @@ import {hasCommandModifier} from 'draft-js/lib/KeyBindingUtil';
 
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {EditorState, Entity, RichUtils, Modifier} from 'draft-js';
+import {ContentState, EditorState, Entity, RichUtils, Modifier, convertFromHTML} from 'draft-js';
 import {ENTITY_TYPE} from 'draft-js-utils';
 import DefaultToolbarConfig from './EditorToolbarConfig';
 import StyleButton from '../ui/StyleButton';
@@ -83,6 +83,9 @@ export default class EditorToolbar extends Component {
         case 'PLACEHOLDER_MENU_BUTTON': {
           return this._renderPlaceholderMenuButton(groupName, toolbarConfig);
         }
+        case 'TEMPLATES_DROPDOWN': {
+          return this._renderTemplatesDropdown(groupName, toolbarConfig);
+        }
       }
     });
     return (
@@ -90,6 +93,39 @@ export default class EditorToolbar extends Component {
         {buttonsGroups}
       </div>
     );
+  }
+
+  _renderTemplatesDropdown(name, toolbarConfig) {
+    let choices = toolbarConfig.TEMPLATES_DROPDOWN;
+    choices.push({label: 'Edit Templates →', key: 'edit-templates'});
+    return (
+      <ButtonGroup className="button-group" key={name}>
+        <Dropdown
+          {...toolbarConfig.extraProps}
+          choices={choices}
+          defaultChoice={'Templates...'}
+          onChange={this._onSelectTemplate}
+          selectedKey={this.state.template}
+        />
+      </ButtonGroup>
+    );
+  }
+
+  _onSelectTemplate(e) {
+    const html = this.props.toolbarConfig.TEMPLATES_DROPDOWN.filter((template) => template.key === e.target.value)[0].data;
+    const blocksFromHTML = convertFromHTML(html);
+    this.props.onChange(
+      EditorState.push(
+        this.props.editorState,
+        ContentState.createFromBlockArray(
+          blocksFromHTML.contentBlocks,
+          blocksFromHTML.entityMap,
+        )
+      )
+    );
+
+    this.setState({template: null});
+    this._focusEditor();
   }
 
   _renderBlockTypeDropdown(name: string, toolbarConfig: ToolbarConfig) {
@@ -101,7 +137,7 @@ export default class EditorToolbar extends Component {
       blockType = Array.from(choices.keys())[0];
     }
     return (
-      <ButtonGroup key={name}>
+      <ButtonGroup className="button-group" key={name}>
         <Dropdown
           {...toolbarConfig.extraProps}
           choices={choices}
@@ -134,11 +170,11 @@ export default class EditorToolbar extends Component {
         label={type.label}
         onToggle={this._toggleBlockType}
         style={type.style}
-        className={type.className}
+        className={cx(type.className, 'style-button')}
       />
     ));
     return (
-      <ButtonGroup key={name}>{buttons}</ButtonGroup>
+      <ButtonGroup className="button-group" key={name}>{buttons}</ButtonGroup>
     );
   }
 
@@ -153,11 +189,11 @@ export default class EditorToolbar extends Component {
         label={type.label}
         onToggle={this._toggleInlineStyle}
         style={type.style}
-        className={type.className}
+        className={cx(type.className, 'style-button')}
       />
     ));
     return (
-      <ButtonGroup key={name}>{buttons}</ButtonGroup>
+      <ButtonGroup className="button-group" key={name}>{buttons}</ButtonGroup>
     );
   }
 
@@ -169,7 +205,7 @@ export default class EditorToolbar extends Component {
     let isCursorOnLink = (entity != null && entity.type === ENTITY_TYPE.LINK);
     let shouldShowLinkButton = hasSelection || isCursorOnLink;
     return (
-      <ButtonGroup key={name}>
+      <ButtonGroup className="button-group" key={name}>
         <PopoverIconButton
           label="Link"
           iconName="link"
@@ -177,6 +213,7 @@ export default class EditorToolbar extends Component {
           showPopover={this.state.showLinkInput}
           onTogglePopover={this._toggleShowLinkInput}
           onSubmit={this._setLink}
+          className="popover-icon-button"
         />
         <IconButton
           {...toolbarConfig.extraProps}
@@ -185,6 +222,7 @@ export default class EditorToolbar extends Component {
           isDisabled={!isCursorOnLink}
           onClick={this._removeLink}
           focusOnClick={false}
+          className="icon-button"
         />
       </ButtonGroup>
     );
@@ -195,7 +233,7 @@ export default class EditorToolbar extends Component {
     let canUndo = editorState.getUndoStack().size !== 0;
     let canRedo = editorState.getRedoStack().size !== 0;
     return (
-      <ButtonGroup key={name}>
+      <ButtonGroup className="button-group" key={name}>
         <IconButton
           {...toolbarConfig.extraProps}
           label="Undo"
@@ -203,6 +241,7 @@ export default class EditorToolbar extends Component {
           isDisabled={!canUndo}
           onClick={this._undo}
           focusOnClick={false}
+          className="icon-button"
         />
         <IconButton
           {...toolbarConfig.extraProps}
@@ -211,6 +250,7 @@ export default class EditorToolbar extends Component {
           isDisabled={!canRedo}
           onClick={this._redo}
           focusOnClick={false}
+          className="icon-button"
         />
       </ButtonGroup>
     );
