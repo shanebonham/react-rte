@@ -30,8 +30,8 @@ export default class IconButton extends Component {
         <Button {...otherProps} title={label} className={className}>
           <span className={styles['icon-' + iconName]} />
           {/* TODO: add text label here with aria-hidden */}
+          {children}
         </Button>
-        {children}
       </ButtonWrap>
     );
   }

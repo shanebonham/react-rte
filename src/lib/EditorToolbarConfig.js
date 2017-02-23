@@ -33,6 +33,7 @@ export const BLOCK_TYPE_DROPDOWN: StyleConfigList = [
   {label: 'Heading Small', style: 'header-three'},
   {label: 'Code Block', style: 'code-block'},
 ];
+
 export const BLOCK_TYPE_BUTTONS: StyleConfigList = [
   {label: 'UL', style: 'unordered-list-item'},
   {label: 'OL', style: 'ordered-list-item'},
