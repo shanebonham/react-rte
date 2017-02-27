@@ -40,7 +40,7 @@ export default class Flyout extends Component {
             data-id={choice.key}
             value={selectedKey}
             onMouseEnter={this._handleMouseEnter}
-            onMouseLeave={this._handleMouseLeave}
+            // onMouseLeave={this._handleMouseLeave}
           >
             {choice.label}
             {this.state.open === choice.key &&
