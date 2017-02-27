@@ -15493,7 +15493,7 @@ function(module, exports, __webpack_require__) {
                             position: "absolute",
                             zIndex: 5e3,
                             marginTop: "-16px",
-                            left: "100px"
+                            left: "75px"
                         }
                     }, _this2._renderChoices(choice.options)));
                 }));
@@ -15522,7 +15522,7 @@ function(module, exports, __webpack_require__) {
             key: "_handleMouseEnter",
             value: function(event) {
                 var id = event.target.dataset.id;
-                this.setState({
+                id && this.setState({
                     open: id
                 });
             }
