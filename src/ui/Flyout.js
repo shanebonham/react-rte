@@ -49,7 +49,7 @@ export default class Flyout extends Component {
                   position: 'absolute',
                   zIndex: 5000,
                   marginTop: '-16px',
-                  left: '100px',
+                  left: '75px',
                 }}
               >{this._renderChoices(choice.options)}</ul>
             }
@@ -74,6 +74,7 @@ export default class Flyout extends Component {
 
   _handleMouseEnter(event) {
     const {id} = event.target.dataset;
+    if (!id) return;
     this.setState({open: id});
   }
 
