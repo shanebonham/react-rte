@@ -15487,8 +15487,7 @@ function(module, exports, __webpack_require__) {
                         key: choice.key,
                         "data-id": choice.key,
                         value: selectedKey,
-                        onMouseEnter: _this2._handleMouseEnter,
-                        onMouseLeave: _this2._handleMouseLeave
+                        onMouseEnter: _this2._handleMouseEnter
                     }), choice.label, _this2.state.open === choice.key && _react2.default.createElement("ul", {
                         style: {
                             position: "absolute",
