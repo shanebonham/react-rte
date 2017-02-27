@@ -3,13 +3,14 @@ import {hasCommandModifier} from 'draft-js/lib/KeyBindingUtil';
 
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {EditorState, Entity, RichUtils} from 'draft-js';
+import {EditorState, Entity, RichUtils, Modifier} from 'draft-js';
 import {ENTITY_TYPE} from 'draft-js-utils';
 import DefaultToolbarConfig from './EditorToolbarConfig';
 import StyleButton from './StyleButton';
 import PopoverIconButton from '../ui/PopoverIconButton';
 import ButtonGroup from '../ui/ButtonGroup';
 import Dropdown from '../ui/Dropdown';
+import Flyout from '../ui/Flyout';
 import IconButton from '../ui/IconButton';
 import getEntityAtCursor from './getEntityAtCursor';
 import clearEntityForRange from './clearEntityForRange';
@@ -81,6 +82,12 @@ export default class EditorToolbar extends Component {
         case 'HISTORY_BUTTONS': {
           return this._renderUndoRedo(groupName, toolbarConfig);
         }
+        case 'PLACEHOLDER_DROPDOWN': {
+          return this._renderPlaceholderDropdown(groupName, toolbarConfig);
+        }
+        case 'PLACEHOLDER_CONTAINER': {
+          return this._renderPlaceholderContainer(groupName, toolbarConfig);
+        }
       }
     });
     return (
@@ -108,6 +115,47 @@ export default class EditorToolbar extends Component {
         />
       </ButtonGroup>
     );
+  }
+
+  _renderPlaceholderDropdown(name: string, toolbarConfig: ToolbarConfig) {
+    let choices = new Map(
+      (toolbarConfig.PLACEHOLDER_DROPDOWN || []).map((group) => [group.key, {label: group.label, options: group.options}])
+    );
+    return (
+      <ButtonGroup key={name}>
+        <Dropdown
+          {...toolbarConfig.extraProps}
+          defaultChoice="Placeholders..."
+          choices={choices}
+          onChange={this._selectPlaceholder}
+        />
+      </ButtonGroup>
+    );
+  }
+
+  _renderPlaceholderContainer(name: string, toolbarConfig: ToolbarConfig) {
+    return (
+      <ButtonGroup key={name}>
+        <IconButton
+          {...toolbarConfig.extraProps}
+          label="Undo"
+          iconName="placeholders"
+          onClick={this._handlePlaceholderClick}
+          focusOnClick={false}
+        >{this.state.showPlaceholders ? '↑' : '↓'}</IconButton>
+        { this.state.showPlaceholders &&
+          <Flyout
+            {...toolbarConfig.extraProps}
+            choices={toolbarConfig.PLACEHOLDER_CONTAINER}
+            onChange={this._selectPlaceholder}
+          />
+        }
+      </ButtonGroup>
+    );
+  }
+
+  _handlePlaceholderClick() {
+    this.setState({showPlaceholders: !this.state.showPlaceholders});
   }
 
   _renderBlockTypeButtons(name: string, toolbarConfig: ToolbarConfig) {
@@ -271,6 +319,22 @@ export default class EditorToolbar extends Component {
 
   _selectBlockType() {
     this._toggleBlockType(...arguments);
+    this._focusEditor();
+  }
+
+  _selectPlaceholder(value) {
+    this.props.onChange(
+      EditorState.push(
+        this.props.editorState,
+        Modifier.insertText(
+          this.props.editorState.getCurrentContent(),
+          this.props.editorState.getSelection(),
+          `\{\{ ${value} \}\} `
+        ),
+        'insert-characters'
+      )
+    );
+    this.setState({showPlaceholders: null});
     this._focusEditor();
   }
 
