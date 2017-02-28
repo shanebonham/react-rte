@@ -74,7 +74,9 @@ export default class Flyout extends Component {
 
   _handleMouseEnter(event) {
     const {id} = event.target.dataset;
-    if (!id) return;
+    if (!id) {
+      return;
+    }
     this.setState({open: id});
   }
 

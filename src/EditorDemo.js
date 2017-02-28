@@ -31,7 +31,7 @@ export default class EditorDemo extends Component {
     let {value, format} = this.state;
 
     const toolbarConfig = {
-      extraProps: { tabIndex: -1},
+      extraProps: {tabIndex: -1},
       display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'LINK_BUTTONS', 'PLACEHOLDER_DROPDOWN', 'PLACEHOLDER_CONTAINER'],
       INLINE_STYLE_BUTTONS: [
         {label: 'Bold', style: 'BOLD', className: 'custom-css-class'},
