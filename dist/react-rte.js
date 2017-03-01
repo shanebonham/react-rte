@@ -188,7 +188,7 @@ function(module, exports, __webpack_require__) {
                     toolbarConfig: toolbarConfig
                 })), _react2.default.createElement("div", {
                     className: (0, _classnames2.default)(_RichTextEditor2.default.root, className)
-                }, editorToolbar, _react2.default.createElement("div", {
+                }, _react2.default.createElement("div", {
                     className: combinedEditorClassName
                 }, _react2.default.createElement(_draftJs.Editor, _extends({}, otherProps, {
                     blockStyleFn: (0, _composite2.default)(defaultBlockStyleFn, blockStyleFn),
@@ -203,7 +203,7 @@ function(module, exports, __webpack_require__) {
                     ref: "editor",
                     spellCheck: !0,
                     readOnly: readOnly
-                }))));
+                }))), editorToolbar);
             }
         }, {
             key: "_shouldHidePlaceholder",
@@ -14032,7 +14032,7 @@ function(module, exports, __webpack_require__) {
             return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
             Constructor;
         };
-    }(), _KeyBindingUtil = __webpack_require__(100), _react = __webpack_require__(1), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(53), _reactDom2 = _interopRequireDefault(_reactDom), _draftJs = __webpack_require__(2), _draftJsUtils = __webpack_require__(147), _EditorToolbarConfig = __webpack_require__(156), _EditorToolbarConfig2 = _interopRequireDefault(_EditorToolbarConfig), _StyleButton = __webpack_require__(157), _StyleButton2 = _interopRequireDefault(_StyleButton), _PopoverIconButton = __webpack_require__(171), _PopoverIconButton2 = _interopRequireDefault(_PopoverIconButton), _ButtonGroup = __webpack_require__(173), _ButtonGroup2 = _interopRequireDefault(_ButtonGroup), _Dropdown = __webpack_require__(178), _Dropdown2 = _interopRequireDefault(_Dropdown), _Flyout = __webpack_require__(181), _Flyout2 = _interopRequireDefault(_Flyout), _IconButton = __webpack_require__(158), _IconButton2 = _interopRequireDefault(_IconButton), _getEntityAtCursor2 = __webpack_require__(182), _getEntityAtCursor3 = _interopRequireDefault(_getEntityAtCursor2), _clearEntityForRange = __webpack_require__(183), _clearEntityForRange2 = _interopRequireDefault(_clearEntityForRange), _classAutobind = __webpack_require__(161), _classAutobind2 = _interopRequireDefault(_classAutobind), _classnames = __webpack_require__(159), _classnames2 = _interopRequireDefault(_classnames), _EditorToolbar = __webpack_require__(184), _EditorToolbar2 = _interopRequireDefault(_EditorToolbar), EditorToolbar = function(_Component) {
+    }(), _KeyBindingUtil = __webpack_require__(100), _react = __webpack_require__(1), _react2 = _interopRequireDefault(_react), _reactDom = __webpack_require__(53), _reactDom2 = _interopRequireDefault(_reactDom), _draftJs = __webpack_require__(2), _draftJsUtils = __webpack_require__(147), _EditorToolbarConfig = __webpack_require__(156), _EditorToolbarConfig2 = _interopRequireDefault(_EditorToolbarConfig), _StyleButton = __webpack_require__(157), _StyleButton2 = _interopRequireDefault(_StyleButton), _PopoverIconButton = __webpack_require__(171), _PopoverIconButton2 = _interopRequireDefault(_PopoverIconButton), _ButtonGroup = __webpack_require__(173), _ButtonGroup2 = _interopRequireDefault(_ButtonGroup), _Dropdown = __webpack_require__(178), _Dropdown2 = _interopRequireDefault(_Dropdown), _Menu = __webpack_require__(181), _Menu2 = _interopRequireDefault(_Menu), _IconButton = __webpack_require__(158), _IconButton2 = _interopRequireDefault(_IconButton), _getEntityAtCursor2 = __webpack_require__(182), _getEntityAtCursor3 = _interopRequireDefault(_getEntityAtCursor2), _clearEntityForRange = __webpack_require__(183), _clearEntityForRange2 = _interopRequireDefault(_clearEntityForRange), _classAutobind = __webpack_require__(161), _classAutobind2 = _interopRequireDefault(_classAutobind), _classnames = __webpack_require__(159), _classnames2 = _interopRequireDefault(_classnames), _EditorToolbar = __webpack_require__(184), _EditorToolbar2 = _interopRequireDefault(_EditorToolbar), EditorToolbar = function(_Component) {
         function EditorToolbar() {
             _classCallCheck(this, EditorToolbar);
             var _this = _possibleConstructorReturn(this, (EditorToolbar.__proto__ || Object.getPrototypeOf(EditorToolbar)).apply(this, arguments));
@@ -14095,11 +14095,13 @@ function(module, exports, __webpack_require__) {
                     } ];
                 }));
                 return choices.has(blockType) || (blockType = Array.from(choices.keys())[0]), _react2.default.createElement(_ButtonGroup2.default, {
+                    className: "button-group",
                     key: name
                 }, _react2.default.createElement(_Dropdown2.default, _extends({}, toolbarConfig.extraProps, {
                     choices: choices,
                     selectedKey: blockType,
-                    onChange: this._selectBlockType
+                    onChange: this._selectBlockType,
+                    className: "dropdown"
                 })));
             }
         }, {
@@ -14112,24 +14114,28 @@ function(module, exports, __webpack_require__) {
                     } ];
                 }));
                 return _react2.default.createElement(_ButtonGroup2.default, {
+                    className: "button-group",
                     key: name
                 }, _react2.default.createElement(_Dropdown2.default, _extends({}, toolbarConfig.extraProps, {
                     defaultChoice: "Placeholders...",
                     choices: choices,
-                    onChange: this._selectPlaceholder
+                    onChange: this._selectPlaceholder,
+                    className: "dropdown"
                 })));
             }
         }, {
             key: "_renderPlaceholderContainer",
             value: function(name, toolbarConfig) {
                 return _react2.default.createElement(_ButtonGroup2.default, {
+                    className: "button-group",
                     key: name
                 }, _react2.default.createElement(_IconButton2.default, _extends({}, toolbarConfig.extraProps, {
                     label: "Undo",
                     iconName: "placeholders",
                     onClick: this._handlePlaceholderClick,
-                    focusOnClick: !1
-                }), this.state.showPlaceholders ? "↑" : "↓"), this.state.showPlaceholders && _react2.default.createElement(_Flyout2.default, _extends({}, toolbarConfig.extraProps, {
+                    focusOnClick: !1,
+                    className: "icon-button"
+                }), this.state.showPlaceholders ? "↑" : "↓"), this.state.showPlaceholders && _react2.default.createElement(_Menu2.default, _extends({}, toolbarConfig.extraProps, {
                     choices: toolbarConfig.PLACEHOLDER_CONTAINER,
                     onChange: this._selectPlaceholder
                 })));
@@ -14151,10 +14157,11 @@ function(module, exports, __webpack_require__) {
                         label: type.label,
                         onToggle: _this3._toggleBlockType,
                         style: type.style,
-                        className: type.className
+                        className: (0, _classnames2.default)(type.className, "style-button")
                     }));
                 });
                 return _react2.default.createElement(_ButtonGroup2.default, {
+                    className: "button-group",
                     key: name
                 }, buttons);
             }
@@ -14168,10 +14175,11 @@ function(module, exports, __webpack_require__) {
                         label: type.label,
                         onToggle: _this4._toggleInlineStyle,
                         style: type.style,
-                        className: type.className
+                        className: (0, _classnames2.default)(type.className, "style-button")
                     }));
                 });
                 return _react2.default.createElement(_ButtonGroup2.default, {
+                    className: "button-group",
                     key: name
                 }, buttons);
             }
@@ -14180,6 +14188,7 @@ function(module, exports, __webpack_require__) {
             value: function(name, toolbarConfig) {
                 var editorState = this.props.editorState, selection = editorState.getSelection(), entity = this._getEntityAtCursor(), hasSelection = !selection.isCollapsed(), isCursorOnLink = null != entity && entity.type === _draftJsUtils.ENTITY_TYPE.LINK, shouldShowLinkButton = hasSelection || isCursorOnLink;
                 return _react2.default.createElement(_ButtonGroup2.default, {
+                    className: "button-group",
                     key: name
                 }, _react2.default.createElement(_PopoverIconButton2.default, {
                     label: "Link",
@@ -14187,13 +14196,15 @@ function(module, exports, __webpack_require__) {
                     isDisabled: !shouldShowLinkButton,
                     showPopover: this.state.showLinkInput,
                     onTogglePopover: this._toggleShowLinkInput,
-                    onSubmit: this._setLink
+                    onSubmit: this._setLink,
+                    className: "popover-icon-button"
                 }), _react2.default.createElement(_IconButton2.default, _extends({}, toolbarConfig.extraProps, {
                     label: "Remove Link",
                     iconName: "remove-link",
                     isDisabled: !isCursorOnLink,
                     onClick: this._removeLink,
-                    focusOnClick: !1
+                    focusOnClick: !1,
+                    className: "icon-button"
                 })));
             }
         }, {
@@ -14201,19 +14212,22 @@ function(module, exports, __webpack_require__) {
             value: function(name, toolbarConfig) {
                 var editorState = this.props.editorState, canUndo = 0 !== editorState.getUndoStack().size, canRedo = 0 !== editorState.getRedoStack().size;
                 return _react2.default.createElement(_ButtonGroup2.default, {
+                    className: "button-group",
                     key: name
                 }, _react2.default.createElement(_IconButton2.default, _extends({}, toolbarConfig.extraProps, {
                     label: "Undo",
                     iconName: "undo",
                     isDisabled: !canUndo,
                     onClick: this._undo,
-                    focusOnClick: !1
+                    focusOnClick: !1,
+                    className: "icon-button"
                 })), _react2.default.createElement(_IconButton2.default, _extends({}, toolbarConfig.extraProps, {
                     label: "Redo",
                     iconName: "redo",
                     isDisabled: !canRedo,
                     onClick: this._redo,
-                    focusOnClick: !1
+                    focusOnClick: !1,
+                    className: "icon-button"
                 })));
             }
         }, {
@@ -15463,38 +15477,29 @@ function(module, exports, __webpack_require__) {
             return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), 
             Constructor;
         };
-    }(), _react = __webpack_require__(1), _react2 = _interopRequireDefault(_react), _classAutobind = __webpack_require__(161), _classAutobind2 = _interopRequireDefault(_classAutobind), Flyout = function(_Component) {
-        function Flyout() {
-            _classCallCheck(this, Flyout);
-            var _this = _possibleConstructorReturn(this, (Flyout.__proto__ || Object.getPrototypeOf(Flyout)).apply(this, arguments));
+    }(), _react = __webpack_require__(1), _react2 = _interopRequireDefault(_react), _classAutobind = __webpack_require__(161), _classAutobind2 = _interopRequireDefault(_classAutobind), _classnames = __webpack_require__(159), _classnames2 = _interopRequireDefault(_classnames), Menu = function(_Component) {
+        function Menu() {
+            _classCallCheck(this, Menu);
+            var _this = _possibleConstructorReturn(this, (Menu.__proto__ || Object.getPrototypeOf(Menu)).apply(this, arguments));
             return _this.state = {
                 open: null
             }, (0, _classAutobind2.default)(_this), _this;
         }
-        return _inherits(Flyout, _Component), _createClass(Flyout, [ {
+        return _inherits(Menu, _Component), _createClass(Menu, [ {
             key: "render",
             value: function() {
-                var _this2 = this, _props = this.props, choices = _props.choices, selectedKey = _props.selectedKey, className = _props.className, otherProps = _objectWithoutProperties(_props, [ "choices", "selectedKey", "className" ]), selectedItem = null == selectedKey ? null : choices.get(selectedKey), selectedValue = selectedItem && selectedItem.label || "";
-                return _react2.default.createElement("ul", {
-                    className: className,
-                    title: selectedValue,
-                    style: {
-                        position: "absolute",
-                        zIndex: 5e3
-                    }
+                var _this2 = this, _props = this.props, choices = _props.choices, className = _props.className, otherProps = _objectWithoutProperties(_props, [ "choices", "className" ]);
+                // className = cx(className, styles.root, 'menu');
+                return className = (0, _classnames2.default)(className, "menu"), _react2.default.createElement("ul", {
+                    className: className
                 }, choices.map(function(choice) {
                     return _react2.default.createElement("li", _extends({}, otherProps, {
                         key: choice.key,
                         "data-id": choice.key,
-                        value: selectedKey,
+                        className: "menu-item",
                         onMouseEnter: _this2._handleMouseEnter
                     }), choice.label, _this2.state.open === choice.key && _react2.default.createElement("ul", {
-                        style: {
-                            position: "absolute",
-                            zIndex: 5e3,
-                            marginTop: "-16px",
-                            left: "75px"
-                        }
+                        className: "sub-menu"
                     }, _this2._renderChoices(choice.options)));
                 }));
             }
@@ -15504,6 +15509,7 @@ function(module, exports, __webpack_require__) {
                 var _this3 = this;
                 return options.map(function(option) {
                     return _react2.default.createElement("li", {
+                        className: "sub-menu-item",
                         key: option.data,
                         onClick: function() {
                             return _this3._onChange(option.data);
@@ -15526,16 +15532,24 @@ function(module, exports, __webpack_require__) {
                     open: id
                 });
             }
-        }, {
-            key: "_handleMouseLeave",
-            value: function() {
-                this.setState({
-                    open: null
-                });
-            }
-        } ]), Flyout;
+        } ]), Menu;
     }(_react.Component);
-    exports.default = Flyout;
+    // const MenuItem = (props) => {
+    //   return <li className={props.className}>{props.children}</li>;
+    // };
+    //
+    // MenuItem.propTypes = {
+    //   children: React.propTypes.string,
+    // };
+    //
+    // const SubMenu = (props) => {
+    //   return <ul className={cx(props.className, 'sub-menu')}>{props.children}</ul>;
+    // }
+    //
+    // const SubMenuItem = (props) => {
+    //   return <li className={cx(props.className, 'sub-menu-item')}>{props.children}</li>
+    // }
+    exports.default = Menu;
 }, /* 182 */
 /***/
 function(module, exports) {
