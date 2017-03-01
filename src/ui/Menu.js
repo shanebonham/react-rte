@@ -1,7 +1,7 @@
 /* @flow */
 import React, {Component} from 'react';
 import autobind from 'class-autobind';
-// import cx from 'classnames';
+import cx from 'classnames';
 
 // import styles from './Dropdown.css';
 
@@ -17,7 +17,7 @@ type Props = {
   className?: string;
 };
 
-export default class Flyout extends Component {
+export default class Menu extends Component {
   props: Props;
 
   constructor() {
@@ -27,30 +27,23 @@ export default class Flyout extends Component {
   }
 
   render() {
-    let {choices, selectedKey, className, ...otherProps} = this.props;
-    // className = cx(className, styles.root);
-    let selectedItem = (selectedKey == null) ? null : choices.get(selectedKey);
-    let selectedValue = selectedItem && selectedItem.label || '';
+    let {choices, className, ...otherProps} = this.props;
+    // className = cx(className, styles.root, 'menu');
+    className = cx(className, 'menu');
     return (
-      <ul className={className} title={selectedValue} style={{position: 'absolute', zIndex: 5000}}>
+      <ul className={className}>
         {choices.map((choice) => (
           <li
             {...otherProps}
             key={choice.key}
             data-id={choice.key}
-            value={selectedKey}
+            className="menu-item"
             onMouseEnter={this._handleMouseEnter}
-            // onMouseLeave={this._handleMouseLeave}
           >
             {choice.label}
             {this.state.open === choice.key &&
               <ul
-                style={{
-                  position: 'absolute',
-                  zIndex: 5000,
-                  marginTop: '-16px',
-                  left: '75px',
-                }}
+                className="sub-menu"
               >{this._renderChoices(choice.options)}</ul>
             }
           </li>
@@ -62,7 +55,7 @@ export default class Flyout extends Component {
   _renderChoices(options) {
     return options.map((option) => {
       return (
-        <li key={option.data} onClick={() => this._onChange(option.data)}>{option.label}</li>
+        <li className="sub-menu-item" key={option.data} onClick={() => this._onChange(option.data)}>{option.label}</li>
       );
     });
   }
@@ -79,8 +72,20 @@ export default class Flyout extends Component {
     }
     this.setState({open: id});
   }
-
-  _handleMouseLeave() {
-    this.setState({open: null});
-  }
 }
+
+// const MenuItem = (props) => {
+//   return <li className={props.className}>{props.children}</li>;
+// };
+//
+// MenuItem.propTypes = {
+//   children: React.propTypes.string,
+// };
+//
+// const SubMenu = (props) => {
+//   return <ul className={cx(props.className, 'sub-menu')}>{props.children}</ul>;
+// }
+//
+// const SubMenuItem = (props) => {
+//   return <li className={cx(props.className, 'sub-menu-item')}>{props.children}</li>
+// }

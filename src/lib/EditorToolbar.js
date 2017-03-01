@@ -10,7 +10,7 @@ import StyleButton from './StyleButton';
 import PopoverIconButton from '../ui/PopoverIconButton';
 import ButtonGroup from '../ui/ButtonGroup';
 import Dropdown from '../ui/Dropdown';
-import Flyout from '../ui/Flyout';
+import Menu from '../ui/Menu';
 import IconButton from '../ui/IconButton';
 import getEntityAtCursor from './getEntityAtCursor';
 import clearEntityForRange from './clearEntityForRange';
@@ -144,7 +144,7 @@ export default class EditorToolbar extends Component {
           focusOnClick={false}
         >{this.state.showPlaceholders ? '↑' : '↓'}</IconButton>
         { this.state.showPlaceholders &&
-          <Flyout
+          <Menu
             {...toolbarConfig.extraProps}
             choices={toolbarConfig.PLACEHOLDER_CONTAINER}
             onChange={this._selectPlaceholder}
