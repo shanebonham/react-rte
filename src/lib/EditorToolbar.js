@@ -106,12 +106,13 @@ export default class EditorToolbar extends Component {
       blockType = Array.from(choices.keys())[0];
     }
     return (
-      <ButtonGroup key={name}>
+      <ButtonGroup className="button-group" key={name}>
         <Dropdown
           {...toolbarConfig.extraProps}
           choices={choices}
           selectedKey={blockType}
           onChange={this._selectBlockType}
+          className="dropdown"
         />
       </ButtonGroup>
     );
@@ -122,12 +123,13 @@ export default class EditorToolbar extends Component {
       (toolbarConfig.PLACEHOLDER_DROPDOWN || []).map((group) => [group.key, {label: group.label, options: group.options}])
     );
     return (
-      <ButtonGroup key={name}>
+      <ButtonGroup className="button-group" key={name}>
         <Dropdown
           {...toolbarConfig.extraProps}
           defaultChoice="Placeholders..."
           choices={choices}
           onChange={this._selectPlaceholder}
+          className="dropdown"
         />
       </ButtonGroup>
     );
@@ -135,13 +137,14 @@ export default class EditorToolbar extends Component {
 
   _renderPlaceholderContainer(name: string, toolbarConfig: ToolbarConfig) {
     return (
-      <ButtonGroup key={name}>
+      <ButtonGroup className="button-group" key={name}>
         <IconButton
           {...toolbarConfig.extraProps}
           label="Undo"
           iconName="placeholders"
           onClick={this._handlePlaceholderClick}
           focusOnClick={false}
+          className="icon-button"
         >{this.state.showPlaceholders ? '↑' : '↓'}</IconButton>
         { this.state.showPlaceholders &&
           <Menu
@@ -168,11 +171,11 @@ export default class EditorToolbar extends Component {
         label={type.label}
         onToggle={this._toggleBlockType}
         style={type.style}
-        className={type.className}
+        className={cx(type.className, 'style-button')}
       />
     ));
     return (
-      <ButtonGroup key={name}>{buttons}</ButtonGroup>
+      <ButtonGroup className="button-group" key={name}>{buttons}</ButtonGroup>
     );
   }
 
@@ -187,11 +190,11 @@ export default class EditorToolbar extends Component {
         label={type.label}
         onToggle={this._toggleInlineStyle}
         style={type.style}
-        className={type.className}
+        className={cx(type.className, 'style-button')}
       />
     ));
     return (
-      <ButtonGroup key={name}>{buttons}</ButtonGroup>
+      <ButtonGroup className="button-group" key={name}>{buttons}</ButtonGroup>
     );
   }
 
@@ -203,7 +206,7 @@ export default class EditorToolbar extends Component {
     let isCursorOnLink = (entity != null && entity.type === ENTITY_TYPE.LINK);
     let shouldShowLinkButton = hasSelection || isCursorOnLink;
     return (
-      <ButtonGroup key={name}>
+      <ButtonGroup className="button-group" key={name}>
         <PopoverIconButton
           label="Link"
           iconName="link"
@@ -211,6 +214,7 @@ export default class EditorToolbar extends Component {
           showPopover={this.state.showLinkInput}
           onTogglePopover={this._toggleShowLinkInput}
           onSubmit={this._setLink}
+          className="popover-icon-button"
         />
         <IconButton
           {...toolbarConfig.extraProps}
@@ -219,6 +223,7 @@ export default class EditorToolbar extends Component {
           isDisabled={!isCursorOnLink}
           onClick={this._removeLink}
           focusOnClick={false}
+          className="icon-button"
         />
       </ButtonGroup>
     );
@@ -229,7 +234,7 @@ export default class EditorToolbar extends Component {
     let canUndo = editorState.getUndoStack().size !== 0;
     let canRedo = editorState.getRedoStack().size !== 0;
     return (
-      <ButtonGroup key={name}>
+      <ButtonGroup className="button-group" key={name}>
         <IconButton
           {...toolbarConfig.extraProps}
           label="Undo"
@@ -237,6 +242,7 @@ export default class EditorToolbar extends Component {
           isDisabled={!canUndo}
           onClick={this._undo}
           focusOnClick={false}
+          className="icon-button"
         />
         <IconButton
           {...toolbarConfig.extraProps}
@@ -245,6 +251,7 @@ export default class EditorToolbar extends Component {
           isDisabled={!canRedo}
           onClick={this._redo}
           focusOnClick={false}
+          className="icon-button"
         />
       </ButtonGroup>
     );
