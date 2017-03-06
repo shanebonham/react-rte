@@ -114,7 +114,6 @@ export default class RichTextEditor extends Component {
     }
     return (
       <div className={cx(styles.root, className)}>
-        {editorToolbar}
         <div className={combinedEditorClassName}>
           <Editor
             {...otherProps}
@@ -132,6 +131,7 @@ export default class RichTextEditor extends Component {
             readOnly={readOnly}
           />
         </div>
+        {editorToolbar}
       </div>
     );
   }
