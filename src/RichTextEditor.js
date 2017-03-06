@@ -150,6 +150,7 @@ export default class RichTextEditor extends Component {
             readOnly={readOnly}
           />
         </div>
+        {editorToolbar}
       </div>
     );
   }
