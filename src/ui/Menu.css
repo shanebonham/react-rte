@@ -1,0 +1,40 @@
+.root {
+  position: absolute;
+  left: 0;
+  top: 36px;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  background: transparent;
+  z-index: 1000;
+  padding: 5px 0 5px 0;
+  margin: -1px 0 0;
+  min-width: 160px;
+  background: #fff;
+  border: 1px solid #989898;
+  max-height: 400px;
+  overflow: visible;
+}
+
+.root .menuitem {
+  display: block;
+  padding: 6px 15px 6px 12px;
+  clear: both;
+  font-weight: normal;
+  line-height: 20px;
+  color: #333;
+  white-space: nowrap;
+  cursor: pointer;
+  line-height: normal;
+  border-left: 4px solid transparent;
+  margin-bottom: 1px;
+  position: relative;
+}
+
+.root .menuitem:hover {
+  background-color: #f0f4fd;
+}
+
+.root .submenu {
+  left: 155px;
+  top: -5px;
+  list-style: none;
+}
