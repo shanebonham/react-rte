@@ -43,6 +43,7 @@
   display: block;
   flex: 1 0 auto;
   height: 30px;
+  width: auto !important;
   background: none white;
   border: 1px solid #999;
   border-radius: 2px;
