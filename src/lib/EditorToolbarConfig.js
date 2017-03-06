@@ -13,9 +13,9 @@ export type GroupName = 'INLINE_STYLE_BUTTONS' | 'BLOCK_TYPE_BUTTONS' | 'LINK_BU
 export type ToolbarConfig = {
   display: Array<GroupName>;
   extraProps?: Object;
-  INLINE_STYLE_BUTTONS: StyleConfigList;
-  BLOCK_TYPE_DROPDOWN: StyleConfigList;
-  BLOCK_TYPE_BUTTONS: StyleConfigList;
+  INLINE_STYLE_BUTTONS?: StyleConfigList;
+  BLOCK_TYPE_DROPDOWN?: StyleConfigList;
+  BLOCK_TYPE_BUTTONS?: StyleConfigList;
 };
 
 export const INLINE_STYLE_BUTTONS: StyleConfigList = [

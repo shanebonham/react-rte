@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import RichTextEditor, {createEmptyValue} from './RichTextEditor';
 import {convertToRaw} from 'draft-js';
 import autobind from 'class-autobind';
-
+import type {ToolbarConfig} from './lib/EditorToolbarConfig';
 import type {EditorValue} from './RichTextEditor';
 
 type Props = {};
@@ -30,6 +30,35 @@ export default class EditorDemo extends Component {
   render() {
     let {value, format} = this.state;
 
+    const toolbarConfig: ToolbarConfig = {
+      extraProps: {tabIndex: -1},
+      display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'LINK_BUTTONS', 'PLACEHOLDER_MENU_BUTTON'],
+      INLINE_STYLE_BUTTONS: [
+        {label: 'Bold', style: 'BOLD'},
+        {label: 'Italic', style: 'ITALIC'},
+      ],
+      BLOCK_TYPE_BUTTONS: [
+        {label: 'UL', style: 'unordered-list-item'},
+        {label: 'OL', style: 'ordered-list-item'},
+        {label: 'Heading', style: 'header-one'},
+      ],
+      PLACEHOLDER_MENU_BUTTON: [
+        {label: 'Recipient', key: 'recipient', options: [
+          {label: 'Full Name', data: 'to.full_name'},
+          {label: 'First Name', data: 'to.first_name'},
+          {label: 'Last Name', data: 'to.last_name'},
+        ]},
+        {label: 'Sender', key: 'sender', options: [
+          {label: 'Full Name', data: 'from.full_name'},
+          {label: 'First Name', data: 'from.first_name'},
+          {label: 'Last Name', data: 'from.last_name'},
+        ]},
+        {label: 'Organization', key: 'organization', options: [
+          {label: 'Name', data: 'organization.name'},
+        ]},
+      ],
+    };
+
     return (
       <div className="editor-demo">
         <div className="row">
@@ -37,6 +66,7 @@ export default class EditorDemo extends Component {
         </div>
         <div className="row">
           <RichTextEditor
+            toolbarConfig={toolbarConfig}
             value={value}
             onChange={this._onChange}
             className="react-rte-demo"
