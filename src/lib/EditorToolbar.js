@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom';
 import {EditorState, Entity, EntityDescription, RichUtils, Modifier} from 'draft-js';
 import {ENTITY_TYPE} from 'draft-js-utils';
 import DefaultToolbarConfig from './EditorToolbarConfig';
-import StyleButton from './StyleButton';
+import StyleButton from '../ui/StyleButton';
 import PopoverIconButton from '../ui/PopoverIconButton';
 import ButtonGroup from '../ui/ButtonGroup';
 import Dropdown from '../ui/Dropdown';
