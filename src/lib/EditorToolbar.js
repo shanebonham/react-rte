@@ -10,6 +10,7 @@ import StyleButton from '../ui/StyleButton';
 import PopoverIconButton from '../ui/PopoverIconButton';
 import ButtonGroup from '../ui/ButtonGroup';
 import Dropdown from '../ui/Dropdown';
+import MenuContainer from '../ui/MenuContainer';
 import IconButton from '../ui/IconButton';
 import getEntityAtCursor from './getEntityAtCursor';
 import clearEntityForRange from './clearEntityForRange';
@@ -92,6 +93,9 @@ export default class EditorToolbar extends Component {
         case 'HISTORY_BUTTONS': {
           return this._renderUndoRedo(groupName, toolbarConfig);
         }
+        case 'PLACEHOLDER_MENU_BUTTON': {
+          return this._renderPlaceholderMenuButton(groupName, toolbarConfig);
+        }
       }
     });
     return (
@@ -150,6 +154,18 @@ export default class EditorToolbar extends Component {
           onChange={this._selectBlockType}
         />
       </ButtonGroup>
+    );
+  }
+
+  _renderPlaceholderMenuButton(name: string, toolbarConfig: ToolbarConfig) {
+    return (
+      <MenuContainer
+        key="placeholders"
+        buttonLabel="Placeholders"
+        iconName="placeholders"
+        items={toolbarConfig.PLACEHOLDER_MENU_BUTTON}
+        onSelect={this._selectPlaceholder}
+      />
     );
   }
 
@@ -410,6 +426,21 @@ export default class EditorToolbar extends Component {
 
   _selectBlockType() {
     this._toggleBlockType(...arguments);
+    this._focusEditor();
+  }
+
+  _selectPlaceholder(value: string) {
+    this.props.onChange(
+      EditorState.push(
+        this.props.editorState,
+        Modifier.insertText(
+          this.props.editorState.getCurrentContent(),
+          this.props.editorState.getSelection(),
+          `\{\{ ${value} \}\} `
+        ),
+        'insert-characters'
+      )
+    );
     this._focusEditor();
   }
 
