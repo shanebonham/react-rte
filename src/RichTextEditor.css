@@ -2,13 +2,11 @@
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 3px;
-  font-family: 'Georgia', serif;
-  font-size: 14px;
 }
 
 .editor {
   cursor: text;
-  font-size: 16px;
+  height: 150px;
 }
 
 .editor :global(.public-DraftEditorPlaceholder-root),
