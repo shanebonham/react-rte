@@ -8,7 +8,7 @@ export type StyleConfig = {
 
 export type StyleConfigList = Array<StyleConfig>;
 
-export type GroupName = 'INLINE_STYLE_BUTTONS' | 'BLOCK_TYPE_BUTTONS' | 'LINK_BUTTONS' | 'BLOCK_TYPE_DROPDOWN' | 'HISTORY_BUTTONS';
+export type GroupName = 'INLINE_STYLE_BUTTONS' | 'BLOCK_TYPE_BUTTONS' | 'LINK_BUTTONS' | 'BLOCK_TYPE_DROPDOWN' | 'HISTORY_BUTTONS' | 'PLACEHOLDER_MENU_BUTTON';
 
 export type ToolbarConfig = {
   display: Array<GroupName>;
@@ -16,6 +16,7 @@ export type ToolbarConfig = {
   INLINE_STYLE_BUTTONS?: StyleConfigList;
   BLOCK_TYPE_DROPDOWN?: StyleConfigList;
   BLOCK_TYPE_BUTTONS?: StyleConfigList;
+  PLACEHOLDER_MENU_BUTTON?: Array<Object>;
 };
 
 export const INLINE_STYLE_BUTTONS: StyleConfigList = [
