@@ -14515,7 +14515,7 @@ function(module, exports, __webpack_require__) {
                 var config = this.props.toolbarConfig.TEMPLATES_DROPDOWN || [], _config$filter$ = config.filter(function(template) {
                     return template.key === e.target.value;
                 })[0], callback = _config$filter$.callback, data = _config$filter$.data;
-                if (callback) callback(); else if (data) {
+                if (callback && callback(), data) {
                     var blocksFromHTML = (0, _draftJs.convertFromHTML)(data);
                     this.props.onChange(_draftJs.EditorState.push(this.props.editorState, _draftJs.ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap))), 
                     // this.setState({template: ''});
