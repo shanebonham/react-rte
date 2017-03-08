@@ -118,7 +118,8 @@ export default class EditorToolbar extends Component {
     const {callback, data} = config.filter((template) => template.key === e.target.value)[0];
     if (callback) {
       callback();
-    } else if (data) {
+    }
+    if (data) {
       const blocksFromHTML = convertFromHTML(data);
       this.props.onChange(
         EditorState.push(
