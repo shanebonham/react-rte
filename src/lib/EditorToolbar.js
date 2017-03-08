@@ -101,7 +101,6 @@ export default class EditorToolbar extends Component {
     return (
       <ButtonGroup className="button-group" key={name}>
         <Dropdown
-          {...toolbarConfig.extraProps}
           choices={choices}
           defaultChoice={'Templates...'}
           onChange={this._onSelectTemplate}
@@ -139,7 +138,6 @@ export default class EditorToolbar extends Component {
     return (
       <ButtonGroup className="button-group" key={name}>
         <Dropdown
-          {...toolbarConfig.extraProps}
           choices={choices}
           selectedKey={blockType}
           onChange={this._selectBlockType}
@@ -164,7 +162,6 @@ export default class EditorToolbar extends Component {
     let blockType = this._getCurrentBlockType();
     let buttons = (toolbarConfig.BLOCK_TYPE_BUTTONS || []).map((type, index) => (
       <StyleButton
-        {...toolbarConfig.extraProps}
         key={String(index)}
         isActive={type.style === blockType}
         label={type.label}
@@ -183,7 +180,6 @@ export default class EditorToolbar extends Component {
     let currentStyle = editorState.getCurrentInlineStyle();
     let buttons = (toolbarConfig.INLINE_STYLE_BUTTONS || []).map((type, index) => (
       <StyleButton
-        {...toolbarConfig.extraProps}
         key={String(index)}
         isActive={currentStyle.has(type.style)}
         label={type.label}
@@ -197,7 +193,7 @@ export default class EditorToolbar extends Component {
     );
   }
 
-  _renderLinkButtons(name: string, toolbarConfig: ToolbarConfig) {
+  _renderLinkButtons(name: string) {
     let {editorState} = this.props;
     let selection = editorState.getSelection();
     let entity = this._getEntityAtCursor();
@@ -216,7 +212,6 @@ export default class EditorToolbar extends Component {
           className="popover-icon-button"
         />
         <IconButton
-          {...toolbarConfig.extraProps}
           label="Remove Link"
           iconName="remove-link"
           isDisabled={!isCursorOnLink}
@@ -228,14 +223,13 @@ export default class EditorToolbar extends Component {
     );
   }
 
-  _renderUndoRedo(name: string, toolbarConfig: ToolbarConfig) {
+  _renderUndoRedo(name: string) {
     let {editorState} = this.props;
     let canUndo = editorState.getUndoStack().size !== 0;
     let canRedo = editorState.getRedoStack().size !== 0;
     return (
       <ButtonGroup className="button-group" key={name}>
         <IconButton
-          {...toolbarConfig.extraProps}
           label="Undo"
           iconName="undo"
           isDisabled={!canUndo}
@@ -244,7 +238,6 @@ export default class EditorToolbar extends Component {
           className="icon-button"
         />
         <IconButton
-          {...toolbarConfig.extraProps}
           label="Redo"
           iconName="redo"
           isDisabled={!canRedo}
