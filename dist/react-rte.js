@@ -14512,10 +14512,10 @@ function(module, exports, __webpack_require__) {
         }, {
             key: "handleSelectTemplate",
             value: function(e) {
-                var config = this.props.toolbarConfig.TEMPLATES_DROPDOWN || [], _config$filter$ = config.filter(function(template) {
+                var config = this.props.toolbarConfig.TEMPLATES_DROPDOWN || [], target = config.filter(function(template) {
                     return template.key === e.target.value;
-                })[0], callback = _config$filter$.callback, data = _config$filter$.data;
-                if (callback && callback(), data) {
+                })[0], callback = target.callback, data = target.data;
+                if (callback && callback(target), data) {
                     var blocksFromHTML = (0, _draftJs.convertFromHTML)(data);
                     this.props.onChange(_draftJs.EditorState.push(this.props.editorState, _draftJs.ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap))), 
                     // this.setState({template: ''});
