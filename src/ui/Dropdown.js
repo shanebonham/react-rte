@@ -8,12 +8,15 @@ import styles from './Dropdown.css';
 type Choice = {
   label: string;
   className?: string;
+  key?: string;
+  callback?: Function;
+  data?: string;
 };
 
 type Props = {
   choices: Map<string, Choice>;
-  selectedKey: ?string;
-  onChange: (selectedKey: string) => any;
+  selectedKey?: ?string;
+  onChange: (event: Object) => any;
   className?: string;
   defaultChoice?: string;
 };
@@ -50,18 +53,24 @@ export default class Dropdown extends Component {
 
   _renderChoices() {
     let {choices} = this.props;
-    return choices.map(({options, label, key, className}) => {
-      if (options && options.length) {
-        return (
-          <optgroup key={key} label={label}>
-            { options.map((option) => (
-              <option key={option.data} value={option.data} className={option.className}>{option.label}</option>
-            ))}
-          </optgroup>
-        );
-      } else {
-        return <option key={key} value={key} className={className}>{label}</option>;
-      }
-    });
+    let options = Array.from(choices.entries());
+    return options.map(([key, {label, className}]) => (
+      <option key={key} value={key} className={className}>{label}</option>
+    ));
+    // let {choices} = this.props;
+    // return Array.from(choices).map(({options, label, key, className}) => {
+    //   console.log(options);
+    //   if (options && options.length) {
+    //     return (
+    //       <optgroup key={key} label={label}>
+    //         {options.map((option) => (
+    //           <option key={option.data} value={option.data} className={option.className}>{option.label}</option>
+    //         ))}
+    //       </optgroup>
+    //     );
+    //   } else {
+    //     return <option key={key} value={key} className={className}>{label}</option>;
+    //   }
+    // });
   }
 }

@@ -63,6 +63,7 @@ export default class EditorDemo extends Component {
       TEMPLATES_DROPDOWN: [
         {label: 'Cool Template', key: 'cool-template', data: '<p>Hi {{ to.first_name }},</p>\n<p>What are the <i>haps</i>?</p>\n<p>Love,</p>\n<p>{{ from.full_name }}<br>\n{{ organization.name }}</p>'},
         {label: 'Lame Template', key: 'lame-template', data: 'i am a bad template.'},
+        {label: 'Edit Templates...', key: 'edit-templates', callback: this.editTemplates},
       ],
     };
 
@@ -128,6 +129,10 @@ export default class EditorDemo extends Component {
         </div>
       </div>
     );
+  }
+
+  editTemplates() {
+    console.log("The 'Edit Templates' option was selected.");
   }
 
   _logState() {
