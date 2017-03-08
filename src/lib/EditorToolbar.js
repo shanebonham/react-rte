@@ -115,9 +115,10 @@ export default class EditorToolbar extends Component {
 
   handleSelectTemplate(e: Object) {
     const config = this.props.toolbarConfig.TEMPLATES_DROPDOWN || [];
-    const {callback, data} = config.filter((template) => template.key === e.target.value)[0];
+    const target = config.filter((template) => template.key === e.target.value)[0];
+    const {callback, data} = target;
     if (callback) {
-      callback();
+      callback(target);
     }
     if (data) {
       const blocksFromHTML = convertFromHTML(data);
