@@ -3,7 +3,7 @@ import {hasCommandModifier} from 'draft-js/lib/KeyBindingUtil';
 
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import {EditorState, Entity, RichUtils, Modifier} from 'draft-js';
+import {ContentState, EditorState, Entity, RichUtils, Modifier, convertFromHTML} from 'draft-js';
 import {ENTITY_TYPE} from 'draft-js-utils';
 import DefaultToolbarConfig from './EditorToolbarConfig';
 import StyleButton from '../ui/StyleButton';
@@ -35,6 +35,7 @@ type Props = {
 
 type State = {
   showLinkInput: boolean;
+  // template: string;
 };
 
 export default class EditorToolbar extends Component {
@@ -44,6 +45,7 @@ export default class EditorToolbar extends Component {
   constructor() {
     super(...arguments);
     autobind(this);
+    // this.state = {showLinkInput: false, template: ''};
     this.state = {showLinkInput: false};
   }
 
@@ -83,6 +85,9 @@ export default class EditorToolbar extends Component {
         case 'PLACEHOLDER_MENU_BUTTON': {
           return this._renderPlaceholderMenuButton(groupName, toolbarConfig);
         }
+        case 'TEMPLATES_DROPDOWN': {
+          return this._renderTemplatesDropdown(groupName, toolbarConfig);
+        }
       }
     });
     return (
@@ -90,6 +95,45 @@ export default class EditorToolbar extends Component {
         {buttonsGroups}
       </div>
     );
+  }
+
+  _renderTemplatesDropdown(name: string, toolbarConfig: ToolbarConfig) {
+    let choices = new Map(
+      (toolbarConfig.TEMPLATES_DROPDOWN || []).map((template) => [template.key, {label: template.label}])
+    );
+    return (
+      <ButtonGroup key={name}>
+        <Dropdown
+          choices={choices}
+          defaultChoice={'Templates...'}
+          // selectedKey={this.state.template}
+          onChange={this.handleSelectTemplate}
+        />
+      </ButtonGroup>
+    );
+  }
+
+  handleSelectTemplate(e: Object) {
+    const config = this.props.toolbarConfig.TEMPLATES_DROPDOWN || [];
+    const target = config.filter((template) => template.key === e.target.value)[0];
+    const {callback, data} = target;
+    if (callback) {
+      callback(target);
+    }
+    if (data) {
+      const blocksFromHTML = convertFromHTML(data);
+      this.props.onChange(
+        EditorState.push(
+          this.props.editorState,
+          ContentState.createFromBlockArray(
+            blocksFromHTML.contentBlocks,
+            blocksFromHTML.entityMap,
+          )
+        )
+      );
+      // this.setState({template: ''});
+      this._focusEditor();
+    }
   }
 
   _renderBlockTypeDropdown(name: string, toolbarConfig: ToolbarConfig) {
@@ -103,7 +147,6 @@ export default class EditorToolbar extends Component {
     return (
       <ButtonGroup key={name}>
         <Dropdown
-          {...toolbarConfig.extraProps}
           choices={choices}
           selectedKey={blockType}
           onChange={this._selectBlockType}
@@ -128,7 +171,6 @@ export default class EditorToolbar extends Component {
     let blockType = this._getCurrentBlockType();
     let buttons = (toolbarConfig.BLOCK_TYPE_BUTTONS || []).map((type, index) => (
       <StyleButton
-        {...toolbarConfig.extraProps}
         key={String(index)}
         isActive={type.style === blockType}
         label={type.label}
@@ -147,7 +189,6 @@ export default class EditorToolbar extends Component {
     let currentStyle = editorState.getCurrentInlineStyle();
     let buttons = (toolbarConfig.INLINE_STYLE_BUTTONS || []).map((type, index) => (
       <StyleButton
-        {...toolbarConfig.extraProps}
         key={String(index)}
         isActive={currentStyle.has(type.style)}
         label={type.label}
@@ -161,7 +202,7 @@ export default class EditorToolbar extends Component {
     );
   }
 
-  _renderLinkButtons(name: string, toolbarConfig: ToolbarConfig) {
+  _renderLinkButtons(name: string) {
     let {editorState} = this.props;
     let selection = editorState.getSelection();
     let entity = this._getEntityAtCursor();
@@ -179,7 +220,6 @@ export default class EditorToolbar extends Component {
           onSubmit={this._setLink}
         />
         <IconButton
-          {...toolbarConfig.extraProps}
           label="Remove Link"
           iconName="remove-link"
           isDisabled={!isCursorOnLink}
@@ -190,14 +230,13 @@ export default class EditorToolbar extends Component {
     );
   }
 
-  _renderUndoRedo(name: string, toolbarConfig: ToolbarConfig) {
+  _renderUndoRedo(name: string) {
     let {editorState} = this.props;
     let canUndo = editorState.getUndoStack().size !== 0;
     let canRedo = editorState.getRedoStack().size !== 0;
     return (
       <ButtonGroup key={name}>
         <IconButton
-          {...toolbarConfig.extraProps}
           label="Undo"
           iconName="undo"
           isDisabled={!canUndo}
@@ -205,7 +244,6 @@ export default class EditorToolbar extends Component {
           focusOnClick={false}
         />
         <IconButton
-          {...toolbarConfig.extraProps}
           label="Redo"
           iconName="redo"
           isDisabled={!canRedo}

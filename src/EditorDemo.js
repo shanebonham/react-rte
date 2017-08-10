@@ -27,12 +27,15 @@ export default class EditorDemo extends Component {
     };
   }
 
+  onCoolTemplateSelect() {
+
+  }
+
   render() {
     let {value, format} = this.state;
 
     const toolbarConfig: ToolbarConfig = {
-      extraProps: {tabIndex: -1},
-      display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'LINK_BUTTONS', 'PLACEHOLDER_MENU_BUTTON'],
+      display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'LINK_BUTTONS', 'PLACEHOLDER_MENU_BUTTON', 'TEMPLATES_DROPDOWN'],
       INLINE_STYLE_BUTTONS: [
         {label: 'Bold', style: 'BOLD'},
         {label: 'Italic', style: 'ITALIC'},
@@ -56,6 +59,11 @@ export default class EditorDemo extends Component {
         {label: 'Organization', key: 'organization', options: [
           {label: 'Name', data: 'organization.name'},
         ]},
+      ],
+      TEMPLATES_DROPDOWN: [
+        {label: 'Cool Template', key: 'cool-template', data: '<p>Hi {{ to.first_name }},</p>\n<p>What are the <i>haps</i>?</p>\n<p>Love,</p>\n<p>{{ from.full_name }}<br>\n{{ organization.name }}</p>'},
+        {label: 'Lame Template', key: 'lame-template', data: 'i am a bad template.'},
+        {label: 'Edit Templates...', key: 'edit-templates', callback: this.editTemplates},
       ],
     };
 
@@ -121,6 +129,10 @@ export default class EditorDemo extends Component {
         </div>
       </div>
     );
+  }
+
+  editTemplates() {
+    console.log("The 'Edit Templates' option was selected.");
   }
 
   _logState() {
