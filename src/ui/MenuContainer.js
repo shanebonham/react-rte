@@ -92,11 +92,6 @@ const Menu = (props) => {
   return <ul className={cx(className, styles.menu)}>{children}</ul>;
 };
 
-Menu.propTypes = {
-  className: React.PropTypes.string,
-  children: React.PropTypes.node,
-};
-
 const MenuItem = (props) => {
   let {className, item, children, onMouseEnter} = props;
   return (
@@ -111,31 +106,12 @@ const MenuItem = (props) => {
     </li>);
 };
 
-MenuItem.propTypes = {
-  className: React.PropTypes.string,
-  item: React.PropTypes.object,
-  children: React.PropTypes.node,
-  onMouseEnter: React.PropTypes.func,
-};
-
 const SubMenu = (props) => {
   let {className, children} = props;
   return <ul className={cx(className, styles.menu, styles.submenu)}>{children}</ul>;
 };
 
-SubMenu.propTypes = {
-  className: React.PropTypes.string,
-  children: React.PropTypes.node,
-};
-
 const SubMenuItem = (props) => {
   let {className, label, data, onClick} = props;
   return <li className={cx(className, styles.menuitem)} onClick={onClick} data-data={data}>{label}</li>;
-};
-
-SubMenuItem.propTypes = {
-  className: React.PropTypes.string,
-  label: React.PropTypes.string,
-  data: React.PropTypes.string,
-  onClick: React.PropTypes.func,
 };
