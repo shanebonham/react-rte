@@ -6498,7 +6498,7 @@ function(module, exports, __webpack_require__) {
 function(module, exports, __webpack_require__) {
     var __WEBPACK_AMD_DEFINE_RESULT__;
     /**
-	 * UAParser.js v0.7.12
+	 * UAParser.js v0.7.14
 	 * Lightweight JavaScript-based User-Agent string parser
 	 * https://github.com/faisalman/ua-parser-js
 	 *
@@ -6510,7 +6510,7 @@ function(module, exports, __webpack_require__) {
         //////////////
         // Constants
         /////////////
-        var LIBVERSION = "0.7.12", EMPTY = "", UNKNOWN = "?", FUNC_TYPE = "function", UNDEF_TYPE = "undefined", OBJ_TYPE = "object", STR_TYPE = "string", MAJOR = "major", // deprecated
+        var LIBVERSION = "0.7.14", EMPTY = "", UNKNOWN = "?", FUNC_TYPE = "function", UNDEF_TYPE = "undefined", OBJ_TYPE = "object", STR_TYPE = "string", MAJOR = "major", // deprecated
         MODEL = "model", NAME = "name", TYPE = "type", VENDOR = "vendor", VERSION = "version", ARCHITECTURE = "architecture", CONSOLE = "console", MOBILE = "mobile", TABLET = "tablet", SMARTTV = "smarttv", WEARABLE = "wearable", EMBEDDED = "embedded", util = {
             extend: function(regexes, extensions) {
                 var margedRegexes = {};
@@ -6530,29 +6530,30 @@ function(module, exports, __webpack_require__) {
                 return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
             }
         }, mapper = {
-            rgx: function() {
+            rgx: function(ua, arrays) {
+                //, args = arguments;
+                /*// construct object barebones
+	            for (p = 0; p < args[1].length; p++) {
+	                q = args[1][p];
+	                result[typeof q === OBJ_TYPE ? q[0] : q] = undefined;
+	            }*/
                 // loop through all regexes maps
-                for (var result, j, k, p, q, matches, match, i = 0, args = arguments; i < args.length && !matches; ) {
-                    var regex = args[i], // even sequence (0,2,4,..)
-                    props = args[i + 1];
-                    // odd sequence (1,3,5,..)
-                    // construct object barebones
-                    if (typeof result === UNDEF_TYPE) {
-                        result = {};
-                        for (p in props) props.hasOwnProperty(p) && (q = props[p], typeof q === OBJ_TYPE ? result[q[0]] = undefined : result[q] = undefined);
-                    }
-                    for (// try matching uastring with regexes
-                    j = k = 0; j < regex.length && !matches; ) if (matches = regex[j++].exec(this.getUA())) for (p = 0; p < props.length; p++) match = matches[++k], 
+                for (//var result = {},
+                var j, k, p, q, matches, match, i = 0; i < arrays.length && !matches; ) {
+                    var regex = arrays[i], // even sequence (0,2,4,..)
+                    props = arrays[i + 1];
+                    // try matching uastring with regexes
+                    for (// odd sequence (1,3,5,..)
+                    j = k = 0; j < regex.length && !matches; ) if (matches = regex[j++].exec(ua)) for (p = 0; p < props.length; p++) match = matches[++k], 
                     q = props[p], // check if given property is actually array
                     typeof q === OBJ_TYPE && q.length > 0 ? 2 == q.length ? typeof q[1] == FUNC_TYPE ? // assign modified match
-                    result[q[0]] = q[1].call(this, match) : // assign given value, ignore regex match
-                    result[q[0]] = q[1] : 3 == q.length ? // check whether function or regex
+                    this[q[0]] = q[1].call(this, match) : // assign given value, ignore regex match
+                    this[q[0]] = q[1] : 3 == q.length ? // check whether function or regex
                     typeof q[1] !== FUNC_TYPE || q[1].exec && q[1].test ? // sanitize match using given regex
-                    result[q[0]] = match ? match.replace(q[1], q[2]) : undefined : // call function (usually string mapper)
-                    result[q[0]] = match ? q[1].call(this, match, q[2]) : undefined : 4 == q.length && (result[q[0]] = match ? q[3].call(this, match.replace(q[1], q[2])) : undefined) : result[q] = match ? match : undefined;
+                    this[q[0]] = match ? match.replace(q[1], q[2]) : undefined : // call function (usually string mapper)
+                    this[q[0]] = match ? q[1].call(this, match, q[2]) : undefined : 4 == q.length && (this[q[0]] = match ? q[3].call(this, match.replace(q[1], q[2])) : undefined) : this[q] = match ? match : undefined;
                     i += 2;
                 }
-                return result;
             },
             str: function(str, map) {
                 for (var i in map) // check if array
@@ -6622,8 +6623,8 @@ function(module, exports, __webpack_require__) {
             /(?:ms|\()(ie)\s([\w\.]+)/i, // Internet Explorer
             // Webkit/KHTML based
             /(rekonq)\/([\w\.]+)*/i, // Rekonq
-            /(chromium|flock|rockmelt|midori|epiphany|silk|skyfire|ovibrowser|bolt|iron|vivaldi|iridium|phantomjs)\/([\w\.-]+)/i ], [ NAME, VERSION ], [ /(trident).+rv[:\s]([\w\.]+).+like\sgecko/i ], [ [ NAME, "IE" ], VERSION ], [ /(edge)\/((\d+)?[\w\.]+)/i ], [ NAME, VERSION ], [ /(yabrowser)\/([\w\.]+)/i ], [ [ NAME, "Yandex" ], VERSION ], [ /(comodo_dragon)\/([\w\.]+)/i ], [ [ NAME, /_/g, " " ], VERSION ], [ /(micromessenger)\/([\w\.]+)/i ], [ [ NAME, "WeChat" ], VERSION ], [ /xiaomi\/miuibrowser\/([\w\.]+)/i ], [ VERSION, [ NAME, "MIUI Browser" ] ], [ /\swv\).+(chrome)\/([\w\.]+)/i ], [ [ NAME, /(.+)/, "$1 WebView" ], VERSION ], [ /android.+samsungbrowser\/([\w\.]+)/i, /android.+version\/([\w\.]+)\s+(?:mobile\s?safari|safari)*/i ], [ VERSION, [ NAME, "Android Browser" ] ], [ /(chrome|omniweb|arora|[tizenoka]{5}\s?browser)\/v?([\w\.]+)/i, // Chrome/OmniWeb/Arora/Tizen/Nokia
-            /(qqbrowser)[\/\s]?([\w\.]+)/i ], [ NAME, VERSION ], [ /(uc\s?browser)[\/\s]?([\w\.]+)/i, /ucweb.+(ucbrowser)[\/\s]?([\w\.]+)/i, /juc.+(ucweb)[\/\s]?([\w\.]+)/i ], [ [ NAME, "UCBrowser" ], VERSION ], [ /(dolfin)\/([\w\.]+)/i ], [ [ NAME, "Dolphin" ], VERSION ], [ /((?:android.+)crmo|crios)\/([\w\.]+)/i ], [ [ NAME, "Chrome" ], VERSION ], [ /;fbav\/([\w\.]+);/i ], [ VERSION, [ NAME, "Facebook" ] ], [ /fxios\/([\w\.-]+)/i ], [ VERSION, [ NAME, "Firefox" ] ], [ /version\/([\w\.]+).+?mobile\/\w+\s(safari)/i ], [ VERSION, [ NAME, "Mobile Safari" ] ], [ /version\/([\w\.]+).+?(mobile\s?safari|safari)/i ], [ VERSION, NAME ], [ /webkit.+?(mobile\s?safari|safari)(\/[\w\.]+)/i ], [ NAME, [ VERSION, mapper.str, maps.browser.oldsafari.version ] ], [ /(konqueror)\/([\w\.]+)/i, // Konqueror
+            /(chromium|flock|rockmelt|midori|epiphany|silk|skyfire|ovibrowser|bolt|iron|vivaldi|iridium|phantomjs|bowser)\/([\w\.-]+)/i ], [ NAME, VERSION ], [ /(trident).+rv[:\s]([\w\.]+).+like\sgecko/i ], [ [ NAME, "IE" ], VERSION ], [ /(edge)\/((\d+)?[\w\.]+)/i ], [ NAME, VERSION ], [ /(yabrowser)\/([\w\.]+)/i ], [ [ NAME, "Yandex" ], VERSION ], [ /(puffin)\/([\w\.]+)/i ], [ [ NAME, "Puffin" ], VERSION ], [ /((?:[\s\/])uc?\s?browser|(?:juc.+)ucweb)[\/\s]?([\w\.]+)/i ], [ [ NAME, "UCBrowser" ], VERSION ], [ /(comodo_dragon)\/([\w\.]+)/i ], [ [ NAME, /_/g, " " ], VERSION ], [ /(micromessenger)\/([\w\.]+)/i ], [ [ NAME, "WeChat" ], VERSION ], [ /(QQ)\/([\d\.]+)/i ], [ NAME, VERSION ], [ /m?(qqbrowser)[\/\s]?([\w\.]+)/i ], [ NAME, VERSION ], [ /xiaomi\/miuibrowser\/([\w\.]+)/i ], [ VERSION, [ NAME, "MIUI Browser" ] ], [ /;fbav\/([\w\.]+);/i ], [ VERSION, [ NAME, "Facebook" ] ], [ /(headlesschrome) ([\w\.]+)/i ], [ VERSION, [ NAME, "Chrome Headless" ] ], [ /\swv\).+(chrome)\/([\w\.]+)/i ], [ [ NAME, /(.+)/, "$1 WebView" ], VERSION ], [ /((?:oculus|samsung)browser)\/([\w\.]+)/i ], [ [ NAME, /(.+(?:g|us))(.+)/, "$1 $2" ], VERSION ], [ // Oculus / Samsung Browser
+            /android.+version\/([\w\.]+)\s+(?:mobile\s?safari|safari)*/i ], [ VERSION, [ NAME, "Android Browser" ] ], [ /(chrome|omniweb|arora|[tizenoka]{5}\s?browser)\/v?([\w\.]+)/i ], [ NAME, VERSION ], [ /(dolfin)\/([\w\.]+)/i ], [ [ NAME, "Dolphin" ], VERSION ], [ /((?:android.+)crmo|crios)\/([\w\.]+)/i ], [ [ NAME, "Chrome" ], VERSION ], [ /(coast)\/([\w\.]+)/i ], [ [ NAME, "Opera Coast" ], VERSION ], [ /fxios\/([\w\.-]+)/i ], [ VERSION, [ NAME, "Firefox" ] ], [ /version\/([\w\.]+).+?mobile\/\w+\s(safari)/i ], [ VERSION, [ NAME, "Mobile Safari" ] ], [ /version\/([\w\.]+).+?(mobile\s?safari|safari)/i ], [ VERSION, NAME ], [ /webkit.+?(mobile\s?safari|safari)(\/[\w\.]+)/i ], [ NAME, [ VERSION, mapper.str, maps.browser.oldsafari.version ] ], [ /(konqueror)\/([\w\.]+)/i, // Konqueror
             /(webkit|khtml)\/([\w\.]+)/i ], [ NAME, VERSION ], [ // Gecko based
             /(navigator|netscape)\/([\w\.-]+)/i ], [ [ NAME, "Netscape" ], VERSION ], [ /(swiftfox)/i, // Swiftfox
             /(icedragon|iceweasel|camino|chimera|fennec|maemo\sbrowser|minimo|conkeror)[\/\s]?([\w\.\+]+)/i, // IceDragon/Iceweasel/Camino/Chimera/Fennec/Maemo/Minimo/Conkeror
@@ -6643,21 +6644,22 @@ function(module, exports, __webpack_require__) {
             /(kindle)\/([\w\.]+)/i, // Kindle
             /\s(nook)[\w\s]+build\/(\w+)/i, // Nook
             /(dell)\s(strea[kpr\s\d]*[\dko])/i ], [ VENDOR, MODEL, [ TYPE, TABLET ] ], [ /(kf[A-z]+)\sbuild\/[\w\.]+.*silk\//i ], [ MODEL, [ VENDOR, "Amazon" ], [ TYPE, TABLET ] ], [ /(sd|kf)[0349hijorstuw]+\sbuild\/[\w\.]+.*silk\//i ], [ [ MODEL, mapper.str, maps.device.amazon.model ], [ VENDOR, "Amazon" ], [ TYPE, MOBILE ] ], [ /\((ip[honed|\s\w*]+);.+(apple)/i ], [ MODEL, VENDOR, [ TYPE, MOBILE ] ], [ /\((ip[honed|\s\w*]+);/i ], [ MODEL, [ VENDOR, "Apple" ], [ TYPE, MOBILE ] ], [ /(blackberry)[\s-]?(\w+)/i, // BlackBerry
-            /(blackberry|benq|palm(?=\-)|sonyericsson|acer|asus|dell|huawei|meizu|motorola|polytron)[\s_-]?([\w-]+)*/i, // BenQ/Palm/Sony-Ericsson/Acer/Asus/Dell/Huawei/Meizu/Motorola/Polytron
+            /(blackberry|benq|palm(?=\-)|sonyericsson|acer|asus|dell|meizu|motorola|polytron)[\s_-]?([\w-]+)*/i, // BenQ/Palm/Sony-Ericsson/Acer/Asus/Dell/Meizu/Motorola/Polytron
             /(hp)\s([\w\s]+\w)/i, // HP iPAQ
             /(asus)-?(\w+)/i ], [ VENDOR, MODEL, [ TYPE, MOBILE ] ], [ /\(bb10;\s(\w+)/i ], [ MODEL, [ VENDOR, "BlackBerry" ], [ TYPE, MOBILE ] ], [ // Asus Tablets
             /android.+(transfo[prime\s]{4,10}\s\w+|eeepc|slider\s\w+|nexus 7|padfone)/i ], [ MODEL, [ VENDOR, "Asus" ], [ TYPE, TABLET ] ], [ /(sony)\s(tablet\s[ps])\sbuild\//i, // Sony
-            /(sony)?(?:sgp.+)\sbuild\//i ], [ [ VENDOR, "Sony" ], [ MODEL, "Xperia Tablet" ], [ TYPE, TABLET ] ], [ /(?:sony)?(?:(?:(?:c|d)\d{4})|(?:so[-l].+))\sbuild\//i ], [ [ VENDOR, "Sony" ], [ MODEL, "Xperia Phone" ], [ TYPE, MOBILE ] ], [ /\s(ouya)\s/i, // Ouya
+            /(sony)?(?:sgp.+)\sbuild\//i ], [ [ VENDOR, "Sony" ], [ MODEL, "Xperia Tablet" ], [ TYPE, TABLET ] ], [ /android.+\s([c-g]\d{4}|so[-l]\w+)\sbuild\//i ], [ MODEL, [ VENDOR, "Sony" ], [ TYPE, MOBILE ] ], [ /\s(ouya)\s/i, // Ouya
             /(nintendo)\s([wids3u]+)/i ], [ VENDOR, MODEL, [ TYPE, CONSOLE ] ], [ /android.+;\s(shield)\sbuild/i ], [ MODEL, [ VENDOR, "Nvidia" ], [ TYPE, CONSOLE ] ], [ /(playstation\s[34portablevi]+)/i ], [ MODEL, [ VENDOR, "Sony" ], [ TYPE, CONSOLE ] ], [ /(sprint\s(\w+))/i ], [ [ VENDOR, mapper.str, maps.device.sprint.vendor ], [ MODEL, mapper.str, maps.device.sprint.model ], [ TYPE, MOBILE ] ], [ /(lenovo)\s?(S(?:5000|6000)+(?:[-][\w+]))/i ], [ VENDOR, MODEL, [ TYPE, TABLET ] ], [ /(htc)[;_\s-]+([\w\s]+(?=\))|\w+)*/i, // HTC
             /(zte)-(\w+)*/i, // ZTE
-            /(alcatel|geeksphone|huawei|lenovo|nexian|panasonic|(?=;\s)sony)[_\s-]?([\w-]+)*/i ], [ VENDOR, [ MODEL, /_/g, " " ], [ TYPE, MOBILE ] ], [ /(nexus\s9)/i ], [ MODEL, [ VENDOR, "HTC" ], [ TYPE, TABLET ] ], [ /(nexus\s6p)/i ], [ MODEL, [ VENDOR, "Huawei" ], [ TYPE, MOBILE ] ], [ /(microsoft);\s(lumia[\s\w]+)/i ], [ VENDOR, MODEL, [ TYPE, MOBILE ] ], [ /[\s\(;](xbox(?:\sone)?)[\s\);]/i ], [ MODEL, [ VENDOR, "Microsoft" ], [ TYPE, CONSOLE ] ], [ /(kin\.[onetw]{3})/i ], [ [ MODEL, /\./g, " " ], [ VENDOR, "Microsoft" ], [ TYPE, MOBILE ] ], [ // Motorola
+            /(alcatel|geeksphone|lenovo|nexian|panasonic|(?=;\s)sony)[_\s-]?([\w-]+)*/i ], [ VENDOR, [ MODEL, /_/g, " " ], [ TYPE, MOBILE ] ], [ /(nexus\s9)/i ], [ MODEL, [ VENDOR, "HTC" ], [ TYPE, TABLET ] ], [ /d\/huawei([\w\s-]+)[;\)]/i, /(nexus\s6p)/i ], [ MODEL, [ VENDOR, "Huawei" ], [ TYPE, MOBILE ] ], [ /(microsoft);\s(lumia[\s\w]+)/i ], [ VENDOR, MODEL, [ TYPE, MOBILE ] ], [ /[\s\(;](xbox(?:\sone)?)[\s\);]/i ], [ MODEL, [ VENDOR, "Microsoft" ], [ TYPE, CONSOLE ] ], [ /(kin\.[onetw]{3})/i ], [ [ MODEL, /\./g, " " ], [ VENDOR, "Microsoft" ], [ TYPE, MOBILE ] ], [ // Motorola
             /\s(milestone|droid(?:[2-4x]|\s(?:bionic|x2|pro|razr))?(:?\s4g)?)[\w\s]+build\//i, /mot[\s-]?(\w+)*/i, /(XT\d{3,4}) build\//i, /(nexus\s6)/i ], [ MODEL, [ VENDOR, "Motorola" ], [ TYPE, MOBILE ] ], [ /android.+\s(mz60\d|xoom[\s2]{0,2})\sbuild\//i ], [ MODEL, [ VENDOR, "Motorola" ], [ TYPE, TABLET ] ], [ /hbbtv\/\d+\.\d+\.\d+\s+\([\w\s]*;\s*(\w[^;]*);([^;]*)/i ], [ [ VENDOR, util.trim ], [ MODEL, util.trim ], [ TYPE, SMARTTV ] ], [ /hbbtv.+maple;(\d+)/i ], [ [ MODEL, /^/, "SmartTV" ], [ VENDOR, "Samsung" ], [ TYPE, SMARTTV ] ], [ /\(dtv[\);].+(aquos)/i ], [ MODEL, [ VENDOR, "Sharp" ], [ TYPE, SMARTTV ] ], [ /android.+((sch-i[89]0\d|shw-m380s|gt-p\d{4}|gt-n\d+|sgh-t8[56]9|nexus 10))/i, /((SM-T\w+))/i ], [ [ VENDOR, "Samsung" ], MODEL, [ TYPE, TABLET ] ], [ // Samsung
             /smart-tv.+(samsung)/i ], [ VENDOR, [ TYPE, SMARTTV ], MODEL ], [ /((s[cgp]h-\w+|gt-\w+|galaxy\snexus|sm-\w[\w\d]+))/i, /(sam[sung]*)[\s-]*(\w+-?[\w-]*)*/i, /sec-((sgh\w+))/i ], [ [ VENDOR, "Samsung" ], MODEL, [ TYPE, MOBILE ] ], [ /sie-(\w+)*/i ], [ MODEL, [ VENDOR, "Siemens" ], [ TYPE, MOBILE ] ], [ /(maemo|nokia).*(n900|lumia\s\d+)/i, // Nokia
-            /(nokia)[\s_-]?([\w-]+)*/i ], [ [ VENDOR, "Nokia" ], MODEL, [ TYPE, MOBILE ] ], [ /android\s3\.[\s\w;-]{10}(a\d{3})/i ], [ MODEL, [ VENDOR, "Acer" ], [ TYPE, TABLET ] ], [ /android\s3\.[\s\w;-]{10}(lg?)-([06cv9]{3,4})/i ], [ [ VENDOR, "LG" ], MODEL, [ TYPE, TABLET ] ], [ /(lg) netcast\.tv/i ], [ VENDOR, MODEL, [ TYPE, SMARTTV ] ], [ /(nexus\s[45])/i, // LG
-            /lg[e;\s\/-]+(\w+)*/i ], [ MODEL, [ VENDOR, "LG" ], [ TYPE, MOBILE ] ], [ /android.+(ideatab[a-z0-9\-\s]+)/i ], [ MODEL, [ VENDOR, "Lenovo" ], [ TYPE, TABLET ] ], [ /linux;.+((jolla));/i ], [ VENDOR, MODEL, [ TYPE, MOBILE ] ], [ /((pebble))app\/[\d\.]+\s/i ], [ VENDOR, MODEL, [ TYPE, WEARABLE ] ], [ /android.+;\s(glass)\s\d/i ], [ MODEL, [ VENDOR, "Google" ], [ TYPE, WEARABLE ] ], [ /android.+(\w+)\s+build\/hm\1/i, // Xiaomi Hongmi 'numeric' models
+            /(nokia)[\s_-]?([\w-]+)*/i ], [ [ VENDOR, "Nokia" ], MODEL, [ TYPE, MOBILE ] ], [ /android\s3\.[\s\w;-]{10}(a\d{3})/i ], [ MODEL, [ VENDOR, "Acer" ], [ TYPE, TABLET ] ], [ /android.+([vl]k\-?\d{3})\s+build/i ], [ MODEL, [ VENDOR, "LG" ], [ TYPE, TABLET ] ], [ /android\s3\.[\s\w;-]{10}(lg?)-([06cv9]{3,4})/i ], [ [ VENDOR, "LG" ], MODEL, [ TYPE, TABLET ] ], [ /(lg) netcast\.tv/i ], [ VENDOR, MODEL, [ TYPE, SMARTTV ] ], [ /(nexus\s[45])/i, // LG
+            /lg[e;\s\/-]+(\w+)*/i, /android.+lg(\-?[\d\w]+)\s+build/i ], [ MODEL, [ VENDOR, "LG" ], [ TYPE, MOBILE ] ], [ /android.+(ideatab[a-z0-9\-\s]+)/i ], [ MODEL, [ VENDOR, "Lenovo" ], [ TYPE, TABLET ] ], [ /linux;.+((jolla));/i ], [ VENDOR, MODEL, [ TYPE, MOBILE ] ], [ /((pebble))app\/[\d\.]+\s/i ], [ VENDOR, MODEL, [ TYPE, WEARABLE ] ], [ /android.+;\s(oppo)\s?([\w\s]+)\sbuild/i ], [ VENDOR, MODEL, [ TYPE, MOBILE ] ], [ /crkey/i ], [ [ MODEL, "Chromecast" ], [ VENDOR, "Google" ] ], [ /android.+;\s(glass)\s\d/i ], [ MODEL, [ VENDOR, "Google" ], [ TYPE, WEARABLE ] ], [ /android.+;\s(pixel c)\s/i ], [ MODEL, [ VENDOR, "Google" ], [ TYPE, TABLET ] ], [ /android.+;\s(pixel xl|pixel)\s/i ], [ MODEL, [ VENDOR, "Google" ], [ TYPE, MOBILE ] ], [ /android.+(\w+)\s+build\/hm\1/i, // Xiaomi Hongmi 'numeric' models
             /android.+(hm[\s\-_]*note?[\s_]*(?:\d\w)?)\s+build/i, // Xiaomi Hongmi
-            /android.+(mi[\s\-_]*(?:one|one[\s_]plus|note lte)?[\s_]*(?:\d\w)?)\s+build/i ], [ [ MODEL, /_/g, " " ], [ VENDOR, "Xiaomi" ], [ TYPE, MOBILE ] ], [ /android.+a000(1)\s+build/i ], [ MODEL, [ VENDOR, "OnePlus" ], [ TYPE, MOBILE ] ], [ /\s(tablet)[;\/]/i, // Unidentifiable Tablet
-            /\s(mobile)(?:[;\/]|\ssafari)/i ], [ [ TYPE, util.lowerize ], VENDOR, MODEL ] ],
+            /android.+(mi[\s\-_]*(?:one|one[\s_]plus|note lte)?[\s_]*(?:\d\w)?)\s+build/i ], [ [ MODEL, /_/g, " " ], [ VENDOR, "Xiaomi" ], [ TYPE, MOBILE ] ], [ /android.+;\s(m[1-5]\snote)\sbuild/i ], [ MODEL, [ VENDOR, "Meizu" ], [ TYPE, TABLET ] ], [ /android.+a000(1)\s+build/i ], [ MODEL, [ VENDOR, "OnePlus" ], [ TYPE, MOBILE ] ], [ /android.+[;\/]\s*(RCT[\d\w]+)\s+build/i ], [ MODEL, [ VENDOR, "RCA" ], [ TYPE, TABLET ] ], [ /android.+[;\/]\s*(Venue[\d\s]*)\s+build/i ], [ MODEL, [ VENDOR, "Dell" ], [ TYPE, TABLET ] ], [ /android.+[;\/]\s*(Q[T|M][\d\w]+)\s+build/i ], [ MODEL, [ VENDOR, "Verizon" ], [ TYPE, TABLET ] ], [ /android.+[;\/]\s+(Barnes[&\s]+Noble\s+|BN[RT])(V?.*)\s+build/i ], [ [ VENDOR, "Barnes & Noble" ], MODEL, [ TYPE, TABLET ] ], [ /android.+[;\/]\s+(TM\d{3}.*\b)\s+build/i ], [ MODEL, [ VENDOR, "NuVision" ], [ TYPE, TABLET ] ], [ /android.+[;\/]\s*(zte)?.+(k\d{2})\s+build/i ], [ [ VENDOR, "ZTE" ], MODEL, [ TYPE, TABLET ] ], [ /android.+[;\/]\s*(gen\d{3})\s+build.*49h/i ], [ MODEL, [ VENDOR, "Swiss" ], [ TYPE, MOBILE ] ], [ /android.+[;\/]\s*(zur\d{3})\s+build/i ], [ MODEL, [ VENDOR, "Swiss" ], [ TYPE, TABLET ] ], [ /android.+[;\/]\s*((Zeki)?TB.*\b)\s+build/i ], [ MODEL, [ VENDOR, "Zeki" ], [ TYPE, TABLET ] ], [ /(android).+[;\/]\s+([YR]\d{2}x?.*)\s+build/i, /android.+[;\/]\s+(Dragon[\-\s]+Touch\s+|DT)(.+)\s+build/i ], [ [ VENDOR, "Dragon Touch" ], MODEL, [ TYPE, TABLET ] ], [ /android.+[;\/]\s*(NS-?.+)\s+build/i ], [ MODEL, [ VENDOR, "Insignia" ], [ TYPE, TABLET ] ], [ /android.+[;\/]\s*((NX|Next)-?.+)\s+build/i ], [ MODEL, [ VENDOR, "NextBook" ], [ TYPE, TABLET ] ], [ /android.+[;\/]\s*(Xtreme\_?)?(V(1[045]|2[015]|30|40|60|7[05]|90))\s+build/i ], [ [ VENDOR, "Voice" ], MODEL, [ TYPE, MOBILE ] ], [ // Voice Xtreme Phones
+            /android.+[;\/]\s*(LVTEL\-?)?(V1[12])\s+build/i ], [ [ VENDOR, "LvTel" ], MODEL, [ TYPE, MOBILE ] ], [ /android.+[;\/]\s*(V(100MD|700NA|7011|917G).*\b)\s+build/i ], [ MODEL, [ VENDOR, "Envizen" ], [ TYPE, TABLET ] ], [ /android.+[;\/]\s*(Le[\s\-]+Pan)[\s\-]+(.*\b)\s+build/i ], [ VENDOR, MODEL, [ TYPE, TABLET ] ], [ /android.+[;\/]\s*(Trio[\s\-]*.*)\s+build/i ], [ MODEL, [ VENDOR, "MachSpeed" ], [ TYPE, TABLET ] ], [ /android.+[;\/]\s*(Trinity)[\-\s]*(T\d{3})\s+build/i ], [ VENDOR, MODEL, [ TYPE, TABLET ] ], [ /android.+[;\/]\s*TU_(1491)\s+build/i ], [ MODEL, [ VENDOR, "Rotor" ], [ TYPE, TABLET ] ], [ /android.+(KS(.+))\s+build/i ], [ MODEL, [ VENDOR, "Amazon" ], [ TYPE, TABLET ] ], [ /android.+(Gigaset)[\s\-]+(Q.+)\s+build/i ], [ VENDOR, MODEL, [ TYPE, TABLET ] ], [ /\s(tablet|tab)[;\/]/i, // Unidentifiable Tablet
+            /\s(mobile)(?:[;\/]|\ssafari)/i ], [ [ TYPE, util.lowerize ], VENDOR, MODEL ], [ /(android.+)[;\/].+build/i ], [ MODEL, [ VENDOR, "Generic" ] ] ],
             engine: [ [ /windows.+\sedge\/([\w\.]+)/i ], [ VERSION, [ NAME, "EdgeHTML" ] ], [ /(presto)\/([\w\.]+)/i, // Presto
             /(webkit|trident|netfront|netsurf|amaya|lynx|w3m)\/([\w\.]+)/i, // WebKit/Trident/NetFront/NetSurf/Amaya/Lynx/w3m
             /(khtml|tasman|links)[\/\s]\(?([\w\.]+)/i, // KHTML/Tasman/Links
@@ -6679,25 +6681,33 @@ function(module, exports, __webpack_require__) {
             /(hurd|linux)\s?([\w\.]+)*/i, // Hurd/Linux
             /(gnu)\s?([\w\.]+)*/i ], [ NAME, VERSION ], [ /(cros)\s[\w]+\s([\w\.]+\w)/i ], [ [ NAME, "Chromium OS" ], VERSION ], [ // Solaris
             /(sunos)\s?([\w\.]+\d)*/i ], [ [ NAME, "Solaris" ], VERSION ], [ // BSD based
-            /\s([frentopc-]{0,4}bsd|dragonfly)\s?([\w\.]+)*/i ], [ NAME, VERSION ], [ /(haiku)\s(\w+)/i ], [ NAME, VERSION ], [ /(ip[honead]+)(?:.*os\s([\w]+)*\slike\smac|;\sopera)/i ], [ [ NAME, "iOS" ], [ VERSION, /_/g, "." ] ], [ /(mac\sos\sx)\s?([\w\s\.]+\w)*/i, /(macintosh|mac(?=_powerpc)\s)/i ], [ [ NAME, "Mac OS" ], [ VERSION, /_/g, "." ] ], [ // Other
+            /\s([frentopc-]{0,4}bsd|dragonfly)\s?([\w\.]+)*/i ], [ NAME, VERSION ], [ /(haiku)\s(\w+)/i ], [ NAME, VERSION ], [ /cfnetwork\/.+darwin/i, /ip[honead]+(?:.*os\s([\w]+)*\slike\smac|;\sopera)/i ], [ [ VERSION, /_/g, "." ], [ NAME, "iOS" ] ], [ /(mac\sos\sx)\s?([\w\s\.]+\w)*/i, /(macintosh|mac(?=_powerpc)\s)/i ], [ [ NAME, "Mac OS" ], [ VERSION, /_/g, "." ] ], [ // Other
             /((?:open)?solaris)[\/\s-]?([\w\.]+)*/i, // Solaris
             /(aix)\s((\d)(?=\.|\)|\s)[\w\.]*)*/i, // AIX
             /(plan\s9|minix|beos|os\/2|amigaos|morphos|risc\sos|openvms)/i, // Plan9/Minix/BeOS/OS2/AmigaOS/MorphOS/RISCOS/OpenVMS
             /(unix)\s?([\w\.]+)*/i ], [ NAME, VERSION ] ]
-        }, UAParser = function(uastring, extensions) {
-            if (!(this instanceof UAParser)) return new UAParser(uastring, extensions).getResult();
-            var ua = uastring || (window && window.navigator && window.navigator.userAgent ? window.navigator.userAgent : EMPTY), rgxmap = extensions ? util.extend(regexes, extensions) : regexes;
+        }, Browser = function(name, version) {
+            this[NAME] = name, this[VERSION] = version;
+        }, CPU = function(arch) {
+            this[ARCHITECTURE] = arch;
+        }, Device = function(vendor, model, type) {
+            this[VENDOR] = vendor, this[MODEL] = model, this[TYPE] = type;
+        }, Engine = Browser, OS = Browser, UAParser = function(uastring, extensions) {
+            if ("object" == typeof uastring && (extensions = uastring, uastring = undefined), 
+            !(this instanceof UAParser)) return new UAParser(uastring, extensions).getResult();
+            var ua = uastring || (window && window.navigator && window.navigator.userAgent ? window.navigator.userAgent : EMPTY), rgxmap = extensions ? util.extend(regexes, extensions) : regexes, browser = new Browser(), cpu = new CPU(), device = new Device(), engine = new Engine(), os = new OS();
             return this.getBrowser = function() {
-                var browser = mapper.rgx.apply(this, rgxmap.browser);
-                return browser.major = util.major(browser.version), browser;
+                // deprecated
+                return mapper.rgx.call(browser, ua, rgxmap.browser), browser.major = util.major(browser.version), 
+                browser;
             }, this.getCPU = function() {
-                return mapper.rgx.apply(this, rgxmap.cpu);
+                return mapper.rgx.call(cpu, ua, rgxmap.cpu), cpu;
             }, this.getDevice = function() {
-                return mapper.rgx.apply(this, rgxmap.device);
+                return mapper.rgx.call(device, ua, rgxmap.device), device;
             }, this.getEngine = function() {
-                return mapper.rgx.apply(this, rgxmap.engine);
+                return mapper.rgx.call(engine, ua, rgxmap.engine), engine;
             }, this.getOS = function() {
-                return mapper.rgx.apply(this, rgxmap.os);
+                return mapper.rgx.call(os, ua, rgxmap.os), os;
             }, this.getResult = function() {
                 return {
                     ua: this.getUA(),
@@ -6710,7 +6720,8 @@ function(module, exports, __webpack_require__) {
             }, this.getUA = function() {
                 return ua;
             }, this.setUA = function(uastring) {
-                return ua = uastring, this;
+                return ua = uastring, browser = new Browser(), cpu = new CPU(), device = new Device(), 
+                engine = new Engine(), os = new OS(), this;
             }, this;
         };
         UAParser.VERSION = LIBVERSION, UAParser.BROWSER = {
@@ -6736,7 +6747,8 @@ function(module, exports, __webpack_require__) {
         }, UAParser.OS = {
             NAME: NAME,
             VERSION: VERSION
-        }, ///////////
+        }, //UAParser.Utils = util;
+        ///////////
         // Export
         //////////
         // check js environment
@@ -6745,14 +6757,14 @@ function(module, exports, __webpack_require__) {
         exports.UAParser = UAParser) : // requirejs env (optional)
         "function" === FUNC_TYPE && __webpack_require__(57) ? (__WEBPACK_AMD_DEFINE_RESULT__ = function() {
             return UAParser;
-        }.call(exports, __webpack_require__, exports, module), !(__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))) : // browser env
-        window.UAParser = UAParser;
+        }.call(exports, __webpack_require__, exports, module), !(__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))) : window && (// browser env
+        window.UAParser = UAParser);
         // jQuery/Zepto specific (optional)
         // Note:
         //   In AMD env the global scope should be kept clean, but jQuery is an exception.
         //   jQuery always exports to global scope, unless jQuery.noConflict(true) is used,
         //   and we should catch that.
-        var $ = window.jQuery || window.Zepto;
+        var $ = window && (window.jQuery || window.Zepto);
         if (typeof $ !== UNDEF_TYPE) {
             var parser = new UAParser();
             $.ua = parser.getResult(), $.ua.get = function() {
@@ -7285,7 +7297,8 @@ function(module, exports) {
 	 * @return {boolean} Whether or not the object is a DOM node.
 	 */
     function isNode(object) {
-        return !(!object || !("function" == typeof Node ? object instanceof Node : "object" == typeof object && "number" == typeof object.nodeType && "string" == typeof object.nodeName));
+        var doc = object ? object.ownerDocument || object : document, defaultView = doc.defaultView || window;
+        return !(!object || !("function" == typeof defaultView.Node ? object instanceof defaultView.Node : "object" == typeof object && "number" == typeof object.nodeType && "string" == typeof object.nodeName));
     }
     module.exports = isNode;
 }, /* 65 */
@@ -7309,13 +7322,16 @@ function(module, exports) {
 	 *
 	 * The activeElement will be null only if the document or document body is not
 	 * yet defined.
+	 *
+	 * @param {?DOMDocument} doc Defaults to current document.
+	 * @return {?DOMElement}
 	 */
-    function getActiveElement() {
-        if ("undefined" == typeof document) return null;
+    function getActiveElement(doc) {
+        if (doc = doc || ("undefined" != typeof document ? document : void 0), "undefined" == typeof doc) return null;
         try {
-            return document.activeElement || document.body;
+            return doc.activeElement || doc.body;
         } catch (e) {
-            return document.body;
+            return doc.body;
         }
     }
     module.exports = getActiveElement;
@@ -7462,11 +7478,11 @@ function(module, exports, __webpack_require__) {
 	   */
         getScrollParent: function(node) {
             if (!node) return null;
-            for (;node && node !== document.body; ) {
+            for (var ownerDocument = node.ownerDocument; node && node !== ownerDocument.body; ) {
                 if (_isNodeScrollable(node, "overflow") || _isNodeScrollable(node, "overflowY") || _isNodeScrollable(node, "overflowX")) return node;
                 node = node.parentNode;
             }
-            return window;
+            return ownerDocument.defaultView || ownerDocument.parentWindow;
         }
     };
     module.exports = Style;
@@ -7608,7 +7624,7 @@ function(module, exports, __webpack_require__) {
 	 * @return {object}
 	 */
     function getElementRect(elem) {
-        var docElem = document.documentElement;
+        var docElem = elem.ownerDocument.documentElement;
         // FF 2, Safari 3 and Opera 9.5- do not support getBoundingClientRect().
         // IE9- will throw if the element is not in the document.
         if (!("getBoundingClientRect" in elem && containsNode(docElem, elem))) return {
@@ -7668,9 +7684,9 @@ function(module, exports, __webpack_require__) {
 	 * @return {object} Map with `x` and `y` keys.
 	 */
     function getScrollPosition(scrollable) {
-        var documentScrollElement = getDocumentScrollElement();
-        scrollable === window && (scrollable = documentScrollElement);
-        var scrollPosition = getUnboundedScrollPosition(scrollable), viewport = scrollable === documentScrollElement ? document.documentElement : scrollable, xMax = scrollable.scrollWidth - viewport.clientWidth, yMax = scrollable.scrollHeight - viewport.clientHeight;
+        var documentScrollElement = getDocumentScrollElement(scrollable.ownerDocument || scrollable.document);
+        scrollable.Window && scrollable instanceof scrollable.Window && (scrollable = documentScrollElement);
+        var scrollPosition = getUnboundedScrollPosition(scrollable), viewport = scrollable === documentScrollElement ? scrollable.ownerDocument.documentElement : scrollable, xMax = scrollable.scrollWidth - viewport.clientWidth, yMax = scrollable.scrollHeight - viewport.clientHeight;
         return scrollPosition.x = Math.max(0, Math.min(scrollPosition.x, xMax)), scrollPosition.y = Math.max(0, Math.min(scrollPosition.y, yMax)), 
         scrollPosition;
     }
@@ -7729,9 +7745,9 @@ function(module, exports) {
 	 * @return {object} Map with `x` and `y` keys.
 	 */
     function getUnboundedScrollPosition(scrollable) {
-        return scrollable === window ? {
-            x: window.pageXOffset || document.documentElement.scrollLeft,
-            y: window.pageYOffset || document.documentElement.scrollTop
+        return scrollable.Window && scrollable instanceof scrollable.Window ? {
+            x: scrollable.pageXOffset || scrollable.document.documentElement.scrollLeft,
+            y: scrollable.pageYOffset || scrollable.document.documentElement.scrollTop
         } : {
             x: scrollable.scrollLeft,
             y: scrollable.scrollTop
@@ -15474,16 +15490,6 @@ function(module, exports, __webpack_require__) {
         } ]), MenuContainer;
     }(_react.Component);
     exports.default = MenuContainer;
-    var Menu = function(props) {
-        var className = props.className, children = props.children;
-        return _react2.default.createElement("ul", {
-            className: (0, _classnames2.default)(className, _MenuContainer2.default.menu)
-        }, children);
-    };
-    Menu.propTypes = {
-        className: _react2.default.PropTypes.string,
-        children: _react2.default.PropTypes.node
-    };
     var MenuItem = function(props) {
         var className = props.className, item = props.item, children = props.children, onMouseEnter = props.onMouseEnter;
         return _react2.default.createElement("li", {
@@ -15493,36 +15499,18 @@ function(module, exports, __webpack_require__) {
             "data-id": item.key,
             onMouseEnter: onMouseEnter
         }, item.label, children);
-    };
-    MenuItem.propTypes = {
-        className: _react2.default.PropTypes.string,
-        item: _react2.default.PropTypes.object,
-        children: _react2.default.PropTypes.node,
-        onMouseEnter: _react2.default.PropTypes.func
-    };
-    var SubMenu = function(props) {
+    }, SubMenu = function(props) {
         var className = props.className, children = props.children;
         return _react2.default.createElement("ul", {
             className: (0, _classnames2.default)(className, _MenuContainer2.default.menu, _MenuContainer2.default.submenu)
         }, children);
-    };
-    SubMenu.propTypes = {
-        className: _react2.default.PropTypes.string,
-        children: _react2.default.PropTypes.node
-    };
-    var SubMenuItem = function(props) {
+    }, SubMenuItem = function(props) {
         var className = props.className, label = props.label, data = props.data, onClick = props.onClick;
         return _react2.default.createElement("li", {
             className: (0, _classnames2.default)(className, _MenuContainer2.default.menuitem),
             onClick: onClick,
             "data-data": data
         }, label);
-    };
-    SubMenuItem.propTypes = {
-        className: _react2.default.PropTypes.string,
-        label: _react2.default.PropTypes.string,
-        data: _react2.default.PropTypes.string,
-        onClick: _react2.default.PropTypes.func
     };
 }, /* 182 */
 /***/
@@ -15819,6 +15807,9 @@ function(module, exports, __webpack_require__) {
             return null;
         }
     }
+    function getEntity(contentState, entityKey) {
+        return contentState.getEntity ? contentState.getEntity(entityKey) : _draftJs.Entity.get(entityKey);
+    }
     function stringifyAttrs(attrs) {
         if (null == attrs) return "";
         var parts = [], _iteratorNormalCompletion6 = !0, _didIteratorError6 = !1, _iteratorError6 = void 0;
@@ -15916,6 +15907,7 @@ function(module, exports, __webpack_require__) {
     }), _DEFAULT_STYLE_MAP), DEFAULT_STYLE_ORDER = [ BOLD, ITALIC, UNDERLINE, STRIKETHROUGH, CODE ], ENTITY_ATTR_MAP = (_ENTITY_ATTR_MAP = {}, 
     _defineProperty(_ENTITY_ATTR_MAP, _draftJsUtils.ENTITY_TYPE.LINK, {
         url: "href",
+        href: "href",
         rel: "rel",
         target: "target",
         title: "title",
@@ -16132,14 +16124,28 @@ function(module, exports, __webpack_require__) {
                             }
                         }
                         return content;
-                    }).join(""), entity = entityKey ? _draftJs.Entity.get(entityKey) : null, entityType = null == entity ? null : entity.getType().toUpperCase();
+                    }).join(""), entity = entityKey ? getEntity(_this.contentState, entityKey) : null, entityType = null == entity ? null : entity.getType().toUpperCase(), entityStyle = void 0;
+                    if (null != entity && _this.options.entityStyleFn && (entityStyle = _this.options.entityStyleFn(entity))) {
+                        var _entityStyle = entityStyle, _element2 = _entityStyle.element, _attributes3 = _entityStyle.attributes, _style3 = _entityStyle.style;
+                        if (null == _element2 && (_element2 = "span"), // Normalize `className` -> `class`, etc.
+                        _attributes3 = (0, _normalizeAttributes2.default)(_attributes3), null != _style3) {
+                            var styleAttr = (0, _styleToCSS2.default)(_style3);
+                            _attributes3 = null == _attributes3 ? {
+                                style: styleAttr
+                            } : _extends({}, _attributes3, {
+                                style: styleAttr
+                            });
+                        }
+                        var attrString = stringifyAttrs(_attributes3);
+                        return "<" + _element2 + attrString + ">" + content + "</" + _element2 + ">";
+                    }
                     if (null != entityType && entityType === _draftJsUtils.ENTITY_TYPE.LINK) {
-                        var attrs = DATA_TO_ATTR.hasOwnProperty(entityType) ? DATA_TO_ATTR[entityType](entityType, entity) : null, attrString = stringifyAttrs(attrs);
-                        return "<a" + attrString + ">" + content + "</a>";
+                        var attrs = DATA_TO_ATTR.hasOwnProperty(entityType) ? DATA_TO_ATTR[entityType](entityType, entity) : null, _attrString = stringifyAttrs(attrs);
+                        return "<a" + _attrString + ">" + content + "</a>";
                     }
                     if (null != entityType && entityType === _draftJsUtils.ENTITY_TYPE.IMAGE) {
-                        var _attrs = DATA_TO_ATTR.hasOwnProperty(entityType) ? DATA_TO_ATTR[entityType](entityType, entity) : null, _attrString = stringifyAttrs(_attrs);
-                        return "<img" + _attrString + "/>";
+                        var _attrs = DATA_TO_ATTR.hasOwnProperty(entityType) ? DATA_TO_ATTR[entityType](entityType, entity) : null, _attrString2 = stringifyAttrs(_attrs);
+                        return "<img" + _attrString2 + "/>";
                     }
                     return content;
                 }).join("");
@@ -16319,7 +16325,13 @@ function(module, exports) {
         flexNegative: !0,
         flexOrder: !0,
         gridRow: !0,
+        gridRowEnd: !0,
+        gridRowSpan: !0,
+        gridRowStart: !0,
         gridColumn: !0,
+        gridColumnEnd: !0,
+        gridColumnSpan: !0,
+        gridColumnStart: !0,
         fontWeight: !0,
         lineClamp: !0,
         lineHeight: !0,
@@ -17314,6 +17326,13 @@ function(module, exports, __webpack_require__) {
             return _interopRequireDefault(_stateFromMarkdown).default;
         }
     });
+    var _MarkdownParser = __webpack_require__(206);
+    Object.defineProperty(exports, "MarkdownParser", {
+        enumerable: !0,
+        get: function() {
+            return _interopRequireDefault(_MarkdownParser).default;
+        }
+    });
 }, /* 205 */
 /***/
 function(module, exports, __webpack_require__) {
@@ -17323,11 +17342,11 @@ function(module, exports, __webpack_require__) {
             default: obj
         };
     }
-    function stateFromMarkdown(markdown) {
+    function stateFromMarkdown(markdown, options) {
         var element = _MarkdownParser2.default.parse(markdown, {
             getAST: !0
         });
-        return (0, _draftJsImportElement.stateFromElement)(element);
+        return (0, _draftJsImportElement.stateFromElement)(element, options);
     }
     Object.defineProperty(exports, "__esModule", {
         value: !0
@@ -17610,7 +17629,10 @@ function(module, exports, __webpack_require__) {
         return "!" !== cap[0].charAt(0) ? this.renderer.link(href, title, this.parse(cap[1])) : this.renderer.image(href, title, cap[1]);
     }, Renderer.prototype.code = function(childNode, lang) {
         var attributes = [];
-        lang && attributes.push([ "class", this.options.langPrefix + lang ]);
+        lang && attributes.push({
+            name: "class",
+            value: this.options.langPrefix + lang
+        });
         var codeNode = new _syntheticDom.ElementNode("code", attributes, [ childNode ]);
         return new _syntheticDom.ElementNode("pre", [], [ codeNode ]);
     }, Renderer.prototype.blockquote = function(childNode) {
@@ -17639,12 +17661,26 @@ function(module, exports, __webpack_require__) {
     }, Renderer.prototype.ins = function(childNode) {
         return new _syntheticDom.ElementNode("ins", [], [ childNode ]);
     }, Renderer.prototype.link = function(href, title, childNode) {
-        var attributes = [ [ "href", href ] ];
-        return title && attributes.push([ "title", title ]), new _syntheticDom.ElementNode("a", attributes, [ childNode ]);
+        var attributes = [ {
+            name: "href",
+            value: href
+        } ];
+        return title && attributes.push({
+            name: "title",
+            value: title
+        }), new _syntheticDom.ElementNode("a", attributes, [ childNode ]);
     }, Renderer.prototype.image = function(href, title, alt) {
-        var attributes = [ [ "src", href ] ];
-        return title && attributes.push([ "title", title ]), alt && attributes.push([ "alt", alt ]), 
-        new _syntheticDom.ElementNode("img", attributes, _syntheticDom.SELF_CLOSING);
+        var attributes = [ {
+            name: "src",
+            value: href
+        } ];
+        return title && attributes.push({
+            name: "title",
+            value: title
+        }), alt && attributes.push({
+            name: "alt",
+            value: alt
+        }), new _syntheticDom.ElementNode("img", attributes, _syntheticDom.SELF_CLOSING);
     }, Renderer.prototype.text = function(childNode) {
         return childNode;
     }, /**
